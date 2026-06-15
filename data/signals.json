@@ -1,4 +1,73 @@
 {
   "schema_version": 1,
-  "signals": []
+  "signals": [
+    {
+      "timestamp": "2026-06-15T18:08:16.162296+00:00",
+      "symbol": "ZECUSDT",
+      "price_usdt": 526.36,
+      "price_thb": 17192.57,
+      "grade": "B",
+      "score": 48,
+      "confidence": 48,
+      "reasons": [
+        "BTC Guard ยังไม่พัง"
+      ],
+      "risk_flags": [
+        "RSI ร้อนเกินไป"
+      ],
+      "data_source_used": "Kraken",
+      "tried_sources": [
+        "Binance",
+        "Kraken"
+      ],
+      "fx_rate": 32.66313,
+      "fx_source": "open.er-api.com",
+      "indicators": {
+        "rsi14": 75.38760301235988,
+        "ema20": 504.19902375497736,
+        "ema50": 471.3212501563218,
+        "ema200": 433.01238978478216,
+        "atr14": 11.882142857142858,
+        "volume_average20": 3028.8216741225,
+        "price_change_24h_percent": 24.346798960548075,
+        "trend_state": "strong_uptrend"
+      },
+      "btc_guard": {
+        "rsi14": 67.735273906666,
+        "ema20": 66091.53317857302,
+        "ema50": 65243.77833546481,
+        "ema200": 63477.285557625255,
+        "atr14": 353.46428571428726,
+        "volume_average20": 111.2490132385,
+        "price_change_24h_percent": 4.755140151746776,
+        "trend_state": "strong_uptrend"
+      },
+      "news_guard": {
+        "ok": true,
+        "state": "not_connected",
+        "reason": "News guard is reserved for future free news/RSS checks; no negative news source is connected yet."
+      },
+      "position": {
+        "total_zec": 0,
+        "total_cost_thb": 0,
+        "average_cost_thb": 0,
+        "lots": []
+      },
+      "profit_state": null,
+      "leg_plan": null,
+      "recommended_action": "WAIT / NO TRADE",
+      "plan": {
+        "mode": "no_position",
+        "action": "รอ",
+        "buy_zone_usdt": 526.36,
+        "buy_zone_thb": 17192.57,
+        "quantity_zec": 1,
+        "tp50_usdt": 552.678,
+        "tp100_usdt": 563.2052,
+        "tp50_thb": 18052.19,
+        "tp100_thb": 18396.04,
+        "reserved_capital_thb": 12500.0
+      }
+    }
+  ]
 }

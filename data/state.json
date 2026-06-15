@@ -20,7 +20,9 @@
     "zec_per_leg": 1
   },
   "last_action": null,
-  "updated_at": null,
+  "updated_at": "2026-06-15T18:08:16.162294+00:00",
   "alerts": {},
-  "daily_summary": {}
+  "daily_summary": {
+    "last_sent_date": "2026-06-15"
+  }
 }
