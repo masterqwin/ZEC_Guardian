@@ -138,6 +138,73 @@
         "tp100_thb": 18261.81,
         "reserved_capital_thb": 12500.0
       }
+    },
+    {
+      "timestamp": "2026-06-15T22:18:26.350897+00:00",
+      "symbol": "ZECUSDT",
+      "price_usdt": 521.92,
+      "price_thb": 17047.54,
+      "grade": "B",
+      "score": 74,
+      "confidence": 74,
+      "reasons": [
+        "ราคาอยู่ใกล้ EMA สำคัญ",
+        "BTC Guard ยังไม่พัง"
+      ],
+      "risk_flags": [],
+      "data_source_used": "Kraken",
+      "tried_sources": [
+        "Binance",
+        "Kraken"
+      ],
+      "fx_rate": 32.66313,
+      "fx_source": "open.er-api.com",
+      "indicators": {
+        "rsi14": 67.72298693896474,
+        "ema20": 509.439927712646,
+        "ema50": 478.53122110189224,
+        "ema200": 437.54063889798255,
+        "atr14": 12.877142857142855,
+        "volume_average20": 2937.968902902,
+        "price_change_24h_percent": 11.867966991747926,
+        "trend_state": "strong_uptrend"
+      },
+      "btc_guard": {
+        "rsi14": 57.50075281467961,
+        "ema20": 66194.7153740746,
+        "ema50": 65415.836292939086,
+        "ema200": 63573.06656916536,
+        "atr14": 372.41428571428645,
+        "volume_average20": 115.196455413,
+        "price_change_24h_percent": 1.4771965996029337,
+        "trend_state": "strong_uptrend"
+      },
+      "news_guard": {
+        "ok": true,
+        "state": "not_connected",
+        "reason": "News guard is reserved for future free news/RSS checks; no negative news source is connected yet."
+      },
+      "position": {
+        "total_zec": 0,
+        "total_cost_thb": 0,
+        "average_cost_thb": 0,
+        "lots": []
+      },
+      "profit_state": null,
+      "leg_plan": null,
+      "recommended_action": "WAIT / NO TRADE",
+      "plan": {
+        "mode": "no_position",
+        "action": "รอ",
+        "buy_zone_usdt": 521.92,
+        "buy_zone_thb": 17047.54,
+        "quantity_zec": 1,
+        "tp50_usdt": 548.016,
+        "tp100_usdt": 558.4544,
+        "tp50_thb": 17899.92,
+        "tp100_thb": 18240.87,
+        "reserved_capital_thb": 12500.0
+      }
     }
   ]
 }
