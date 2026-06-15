@@ -115,6 +115,171 @@
       "risk_flags": [
         "data_error"
       ]
+    },
+    {
+      "timestamp": "2026-06-15T17:30:26.988483+00:00",
+      "symbol": "ZECUSDT",
+      "price_usdt": 527.2,
+      "price_thb": 19242.8,
+      "grade": "B",
+      "score": 48,
+      "confidence": 48,
+      "reasons": [
+        "BTC Guard ยังไม่พัง"
+      ],
+      "risk_flags": [
+        "RSI ร้อนเกินไป"
+      ],
+      "data_source_used": "Binance",
+      "tried_sources": [
+        "Binance"
+      ],
+      "indicators": {
+        "rsi14": 76.17467204796074,
+        "ema20": 502.2534194820276,
+        "ema50": 469.4387454644706,
+        "ema200": 432.00039513080105,
+        "atr14": 12.395714285714295,
+        "volume_average20": 23871.01905,
+        "price_change_24h_percent": 24.6483035819837,
+        "trend_state": "strong_uptrend"
+      },
+      "btc_guard": {
+        "rsi14": 67.04488782822693,
+        "ema20": 66049.05661732866,
+        "ema50": 65216.33680155247,
+        "ema200": 63487.25062331794,
+        "atr14": 389.355714285715,
+        "volume_average20": 885.5492335,
+        "price_change_24h_percent": 4.8285462519675955,
+        "trend_state": "strong_uptrend"
+      },
+      "news_guard": {
+        "ok": true,
+        "state": "not_connected",
+        "reason": "News guard is reserved for future free news/RSS checks; no negative news source is connected yet."
+      },
+      "position": {
+        "total_zec": 0,
+        "total_cost_thb": 0,
+        "average_cost_thb": 0,
+        "lots": []
+      },
+      "profit_state": null,
+      "leg_plan": null,
+      "recommended_action": "WAIT / NO TRADE",
+      "plan": {
+        "mode": "no_position",
+        "action": "รอ",
+        "buy_zone_usdt": 527.2,
+        "buy_zone_thb": 19242.8,
+        "quantity_zec": 1,
+        "tp50_usdt": 553.56,
+        "tp100_usdt": 564.104,
+        "tp50_thb": 20204.94,
+        "tp100_thb": 20589.8,
+        "reserved_capital_thb": 12500.0
+      }
+    },
+    {
+      "timestamp": "2026-06-15T17:31:49.296891+00:00",
+      "symbol": "ZECUSDT",
+      "price_usdt": 525.65,
+      "price_thb": 19186.22,
+      "grade": "B",
+      "score": 48,
+      "confidence": 48,
+      "reasons": [
+        "BTC Guard ยังไม่พัง"
+      ],
+      "risk_flags": [
+        "RSI ร้อนเกินไป"
+      ],
+      "data_source_used": "Binance",
+      "tried_sources": [
+        "Binance"
+      ],
+      "indicators": {
+        "rsi14": 74.59370482401172,
+        "ema20": 502.10580043440854,
+        "ema50": 469.37796115074514,
+        "ema200": 431.9849722452289,
+        "atr14": 12.395714285714295,
+        "volume_average20": 23889.42645,
+        "price_change_24h_percent": 24.281830003546517,
+        "trend_state": "strong_uptrend"
+      },
+      "btc_guard": {
+        "rsi14": 66.30287952465818,
+        "ema20": 66045.63947447152,
+        "ema50": 65214.929742728935,
+        "ema200": 63486.893608392566,
+        "atr14": 389.355714285715,
+        "volume_average20": 887.870576,
+        "price_change_24h_percent": 4.7722485683944615,
+        "trend_state": "strong_uptrend"
+      },
+      "news_guard": {
+        "ok": true,
+        "state": "not_connected",
+        "reason": "News guard is reserved for future free news/RSS checks; no negative news source is connected yet."
+      },
+      "position": {
+        "total_zec": 1.5,
+        "total_cost_thb": 24500.0,
+        "average_cost_thb": 16333.33,
+        "lots": [
+          {
+            "lot_id": "L1",
+            "entry_price_thb": 17000.0,
+            "entry_price_usdt": 532.7,
+            "initial_zec": 1.0,
+            "remaining_zec": 0.5,
+            "cost_thb": 8500.0,
+            "opened_at": "2026-06-15T17:31:11.821501+00:00",
+            "status": "OPEN"
+          },
+          {
+            "lot_id": "L2",
+            "entry_price_thb": 16000.0,
+            "entry_price_usdt": 500.0,
+            "initial_zec": 1.0,
+            "remaining_zec": 1.0,
+            "cost_thb": 16000.0,
+            "opened_at": "2026-06-15T17:31:33.888100+00:00",
+            "status": "OPEN"
+          }
+        ]
+      },
+      "profit_state": {
+        "current_price_thb": 19186.22,
+        "total_zec": 1.5,
+        "total_cost_thb": 24500.0,
+        "market_value_thb": 28779.33,
+        "unrealized_pnl_thb": 4279.33,
+        "unrealized_pnl_percent": 17.47,
+        "average_cost_thb": 16333.33,
+        "tp50_price": 17150.0,
+        "tp100_price": 17966.66,
+        "tp3_price": 18783.33,
+        "amount_to_sell_50_percent": 0.75,
+        "remaining_after_tp50": 0.75,
+        "holding_days": 0
+      },
+      "leg_plan": null,
+      "recommended_action": "TAKE PROFIT ALL",
+      "plan": {
+        "mode": "no_position",
+        "action": "รอ",
+        "buy_zone_usdt": 525.65,
+        "buy_zone_thb": 19186.22,
+        "quantity_zec": 1,
+        "tp50_usdt": 551.9325,
+        "tp100_usdt": 562.4455,
+        "tp50_thb": 20145.54,
+        "tp100_thb": 20529.26,
+        "reserved_capital_thb": 12500.0
+      }
     }
   ]
 }

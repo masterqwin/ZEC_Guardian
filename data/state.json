@@ -1,12 +1,56 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
+  "mode": "POSITION",
+  "cash_thb": 25925.0,
+  "realized_profit_thb": 425.0,
   "position": {
-    "legs": [],
-    "closed_quantity_zec": 0
+    "total_zec": 1.5,
+    "total_cost_thb": 24500.0,
+    "average_cost_thb": 16333.33,
+    "lots": [
+      {
+        "lot_id": "L1",
+        "entry_price_thb": 17000.0,
+        "entry_price_usdt": 532.7,
+        "initial_zec": 1.0,
+        "remaining_zec": 0.5,
+        "cost_thb": 8500.0,
+        "opened_at": "2026-06-15T17:31:11.821501+00:00",
+        "status": "OPEN"
+      },
+      {
+        "lot_id": "L2",
+        "entry_price_thb": 16000.0,
+        "entry_price_usdt": 500.0,
+        "initial_zec": 1.0,
+        "remaining_zec": 1.0,
+        "cost_thb": 16000.0,
+        "opened_at": "2026-06-15T17:31:33.888100+00:00",
+        "status": "OPEN"
+      }
+    ]
   },
+  "targets": {
+    "tp50_percent": 5,
+    "tp100_percent": 10,
+    "tp3_percent": 15
+  },
+  "risk": {
+    "reserve_percent": 25,
+    "max_legs": 4,
+    "zec_per_leg": 1
+  },
+  "last_action": {
+    "type": "BUY",
+    "lot_id": "L2",
+    "zec": 1.0,
+    "price_thb": 16000.0,
+    "timestamp": "2026-06-15T17:31:33.888100+00:00"
+  },
+  "updated_at": "2026-06-15T17:31:50.376234+00:00",
   "alerts": {
-    "error:data_fetch": {
-      "sent_at": "2026-06-15T16:48:29.583635+00:00"
+    "signal:B:TAKE PROFIT ALL": {
+      "sent_at": "2026-06-15T17:31:50.378052+00:00"
     }
   },
   "daily_summary": {

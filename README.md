@@ -60,6 +60,40 @@ Remove `--dry-run` only after checking the generated message.
 
 ZEC Guardian does not trade. You manually update `data/state.json` after real-world actions.
 
+## V2 Manual CLI
+
+ZEC Guardian V2 records manual actions only. It never sends exchange orders.
+
+```bash
+python src/main.py --dry-run
+python src/main.py --buy --zec 1 --price-thb 17000 --price-usdt 532.7
+python src/main.py --sell-percent 50 --price-thb 17850 --price-usdt 560.0
+python src/main.py --sell-zec 0.5 --price-thb 17850 --price-usdt 560.0
+python src/main.py --sell-all --price-thb 18200 --price-usdt 570.0
+```
+
+After every manual command the system updates `data/state.json`, appends `data/trades.json`, recalculates average cost, prints a terminal summary, and sends a Telegram position update only when Telegram secrets are configured.
+
+Core formula:
+
+```text
+total_zec = sum(lot.remaining_zec)
+total_cost_thb = sum(lot.remaining_zec * lot.entry_price_thb)
+average_cost_thb = total_cost_thb / total_zec if total_zec > 0 else 0
+```
+
+V2 state uses FIFO lot reduction for sells. Example:
+
+```text
+Buy 1 ZEC at 17,000 THB
+Sell 50%
+Buy 1 ZEC at 16,000 THB
+
+total_zec = 1.5
+total_cost_thb = 24,500
+average_cost_thb = 16,333.33
+```
+
 ### Record First Buy
 
 Edit `data/state.json`:
@@ -128,4 +162,3 @@ Defaults are in `src/config.py` and can be overridden by environment variables:
 The workflow at `.github/workflows/zec_guardian.yml` runs every 5 minutes and supports manual execution. It installs dependencies, runs `python src/main.py`, and commits changes under `data/*.json` only.
 
 `.env` is ignored and must never be committed.
-

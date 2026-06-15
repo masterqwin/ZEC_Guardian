@@ -4,10 +4,12 @@ import json
 from pathlib import Path
 from typing import Any
 
+from position_manager import DEFAULT_STATE_V2, migrate_state
 
-DEFAULT_STATE = {"schema_version": 1, "position": {"legs": [], "closed_quantity_zec": 0}, "alerts": {}, "daily_summary": {}}
+DEFAULT_STATE = DEFAULT_STATE_V2
 DEFAULT_TRADES = {"schema_version": 1, "trades": []}
 DEFAULT_SIGNALS = {"schema_version": 1, "signals": []}
+DEFAULT_LEARNING = {"schema_version": 1, "learning": []}
 
 
 def ensure_data_files(data_dir: str) -> None:
@@ -17,6 +19,7 @@ def ensure_data_files(data_dir: str) -> None:
         "state.json": DEFAULT_STATE,
         "trades.json": DEFAULT_TRADES,
         "signals.json": DEFAULT_SIGNALS,
+        "learning.json": DEFAULT_LEARNING,
     }
     for filename, default in defaults.items():
         target = path / filename
@@ -41,7 +44,7 @@ def write_json(path: str | Path, payload: dict[str, Any]) -> None:
 
 
 def load_state(data_dir: str) -> dict[str, Any]:
-    return read_json(Path(data_dir) / "state.json", DEFAULT_STATE)
+    return migrate_state(read_json(Path(data_dir) / "state.json", DEFAULT_STATE))
 
 
 def save_state(data_dir: str, state: dict[str, Any]) -> None:
@@ -55,4 +58,3 @@ def append_signal(data_dir: str, signal_record: dict[str, Any], limit: int = 200
     signals.append(signal_record)
     payload["signals"] = signals[-limit:]
     write_json(path, payload)
-

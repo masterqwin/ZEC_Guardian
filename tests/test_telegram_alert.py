@@ -4,7 +4,7 @@ from types import SimpleNamespace
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
-from telegram_alert import format_signal_message
+from telegram_alert import format_signal_message, format_v2_message
 
 
 def signal(grade, risk_flags=None):
@@ -82,3 +82,44 @@ def test_position_message_shows_position_metrics_and_targets():
     assert "TP50: 96.3 USDT / 3514.95 THB" in message
     assert "TP100: 98.1 USDT / 3580.65 THB" in message
     assert "Holding Days: 4" in message
+
+
+def test_v2_wait_mode_does_not_show_tp_numbers():
+    message = format_v2_message(
+        signal("B"),
+        17000,
+        532.7,
+        "Kraken",
+        {"total_zec": 0, "total_cost_thb": 0, "average_cost_thb": 0, "lots": []},
+        "WAIT / NO TRADE",
+    )
+
+    assert "TP50" not in message
+    assert "TP100" not in message
+    assert "Action: WAIT / NO TRADE" in message
+
+
+def test_v2_position_update_shows_average_cost_and_unrealized_pnl():
+    message = format_v2_message(
+        signal("B"),
+        17600,
+        550,
+        "Kraken",
+        {"total_zec": 1, "total_cost_thb": 16000, "average_cost_thb": 16000, "lots": []},
+        "TAKE PROFIT ALL",
+        profit_state={
+            "total_zec": 1,
+            "total_cost_thb": 16000,
+            "average_cost_thb": 16000,
+            "unrealized_pnl_thb": 1600,
+            "unrealized_pnl_percent": 10,
+            "tp50_price": 16800,
+            "tp100_price": 17600,
+            "tp3_price": 18400,
+            "amount_to_sell_50_percent": 0.5,
+            "holding_days": 2,
+        },
+    )
+
+    assert "Average Cost: 16,000.00 THB" in message
+    assert "Unrealized PNL: 1,600.00 THB (10%)" in message

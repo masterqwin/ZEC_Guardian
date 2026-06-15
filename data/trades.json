@@ -1,5 +1,101 @@
 {
   "schema_version": 1,
-  "trades": []
+  "trades": [
+    {
+      "timestamp": "2026-06-15T17:31:11.821501+00:00",
+      "type": "BUY",
+      "lot_id": "L1",
+      "zec": 1.0,
+      "price_thb": 17000.0,
+      "price_usdt": 532.7,
+      "cost_thb": 17000.0,
+      "position_after": {
+        "total_zec": 1.0,
+        "total_cost_thb": 17000.0,
+        "average_cost_thb": 17000.0,
+        "lots": [
+          {
+            "lot_id": "L1",
+            "entry_price_thb": 17000.0,
+            "entry_price_usdt": 532.7,
+            "initial_zec": 1.0,
+            "remaining_zec": 1.0,
+            "cost_thb": 17000.0,
+            "opened_at": "2026-06-15T17:31:11.821501+00:00",
+            "status": "OPEN"
+          }
+        ]
+      }
+    },
+    {
+      "timestamp": "2026-06-15T17:31:27.595909+00:00",
+      "type": "SELL",
+      "zec_sold": 0.5,
+      "sell_percent": 50.0,
+      "price_thb": 17850.0,
+      "price_usdt": 560.0,
+      "proceeds_thb": 8925.0,
+      "realized_profit_thb": 425.0,
+      "lot_reductions": [
+        {
+          "lot_id": "L1",
+          "zec_sold": 0.5,
+          "cost_basis_thb": 8500.0
+        }
+      ],
+      "position_after": {
+        "total_zec": 0.5,
+        "total_cost_thb": 8500.0,
+        "average_cost_thb": 17000.0,
+        "lots": [
+          {
+            "lot_id": "L1",
+            "entry_price_thb": 17000.0,
+            "entry_price_usdt": 532.7,
+            "initial_zec": 1.0,
+            "remaining_zec": 0.5,
+            "cost_thb": 8500.0,
+            "opened_at": "2026-06-15T17:31:11.821501+00:00",
+            "status": "OPEN"
+          }
+        ]
+      }
+    },
+    {
+      "timestamp": "2026-06-15T17:31:33.888100+00:00",
+      "type": "BUY",
+      "lot_id": "L2",
+      "zec": 1.0,
+      "price_thb": 16000.0,
+      "price_usdt": 500.0,
+      "cost_thb": 16000.0,
+      "position_after": {
+        "total_zec": 1.5,
+        "total_cost_thb": 24500.0,
+        "average_cost_thb": 16333.33,
+        "lots": [
+          {
+            "lot_id": "L1",
+            "entry_price_thb": 17000.0,
+            "entry_price_usdt": 532.7,
+            "initial_zec": 1.0,
+            "remaining_zec": 0.5,
+            "cost_thb": 8500.0,
+            "opened_at": "2026-06-15T17:31:11.821501+00:00",
+            "status": "OPEN"
+          },
+          {
+            "lot_id": "L2",
+            "entry_price_thb": 16000.0,
+            "entry_price_usdt": 500.0,
+            "initial_zec": 1.0,
+            "remaining_zec": 1.0,
+            "cost_thb": 16000.0,
+            "opened_at": "2026-06-15T17:31:33.888100+00:00",
+            "status": "OPEN"
+          }
+        ]
+      }
+    }
+  ]
 }
-

@@ -64,6 +64,85 @@ def _append_position_targets(lines: list[str], plan: dict[str, Any]) -> None:
     lines.append(f"Holding Days: {plan['holding_days']}")
 
 
+def format_v2_message(
+    signal: Any,
+    price_thb: float | None,
+    price_usdt: float | None,
+    data_source: str | None,
+    position_state: dict[str, Any],
+    action: str,
+    profit_state: dict[str, Any] | None = None,
+    leg_plan: dict[str, Any] | None = None,
+) -> str:
+    price_thb = float(price_thb or 0)
+    price_usdt = float(price_usdt or 0)
+    total_zec = float(position_state.get("total_zec", 0))
+
+    if total_zec <= 0 and signal.grade != "A":
+        return "\n".join(
+            [
+                "\U0001f7e1 ZEC WAIT MODE",
+                f"Price: {price_thb:,.2f} THB / {price_usdt:,.4f} USDT",
+                f"Data Source: {data_source or '-'}",
+                f"Signal: {signal.grade}",
+                f"Action: {action}",
+                f"Reason: {' + '.join(signal.reasons)}",
+                f"Risk: {' + '.join(signal.risk_flags) if signal.risk_flags else '-'}",
+            ]
+        )
+
+    if total_zec <= 0 and signal.grade == "A":
+        entry = price_thb
+        return "\n".join(
+            [
+                "\U0001f525 ZEC ENTRY SIGNAL",
+                "Action: BUY LEG1",
+                f"Entry Price: {entry:,.2f} THB / {price_usdt:,.4f} USDT",
+                f"Data Source: {data_source or '-'}",
+                f"TP50: {entry * 1.05:,.2f} THB",
+                f"TP100: {entry * 1.10:,.2f} THB",
+                f"TP3: {entry * 1.15:,.2f} THB",
+                f"Confidence: {signal.confidence}%",
+                f"Reason: {' + '.join(signal.reasons)}",
+                f"Risk: {' + '.join(signal.risk_flags) if signal.risk_flags else '-'}",
+            ]
+        )
+
+    if leg_plan and leg_plan.get("can_buy") and signal.grade == "A":
+        return "\n".join(
+            [
+                "\U0001f525 ZEC LEG PLAN",
+                f"Action: BUY {leg_plan['next_leg_id']}",
+                f"Suggested Buy: {leg_plan['suggested_buy_price_thb']:,.2f} THB / {leg_plan['suggested_buy_price_usdt']:,.4f} USDT",
+                f"Suggested ZEC: {leg_plan['suggested_zec']}",
+                f"New Average Cost: {leg_plan['new_average_cost_thb']:,.2f} THB",
+                f"New TP50: {leg_plan['new_tp50']:,.2f} THB",
+                f"New TP100: {leg_plan['new_tp100']:,.2f} THB",
+                f"Cash After Buy: {leg_plan['cash_after_buy']:,.2f} THB",
+                f"Reason: {leg_plan['reason']}",
+            ]
+        )
+
+    profit_state = profit_state or {}
+    return "\n".join(
+        [
+            "\U0001f4ca ZEC POSITION UPDATE",
+            f"Total ZEC: {profit_state.get('total_zec', total_zec)}",
+            f"Total Cost: {profit_state.get('total_cost_thb', 0):,.2f} THB",
+            f"Average Cost: {profit_state.get('average_cost_thb', 0):,.2f} THB",
+            f"Current Price: {price_thb:,.2f} THB / {price_usdt:,.4f} USDT",
+            f"Data Source: {data_source or '-'}",
+            f"Unrealized PNL: {profit_state.get('unrealized_pnl_thb', 0):,.2f} THB ({profit_state.get('unrealized_pnl_percent', 0)}%)",
+            f"TP50: {profit_state.get('tp50_price', 0):,.2f} THB",
+            f"TP100: {profit_state.get('tp100_price', 0):,.2f} THB",
+            f"TP3: {profit_state.get('tp3_price', 0):,.2f} THB",
+            f"Amount to sell at TP50: {profit_state.get('amount_to_sell_50_percent', 0)} ZEC",
+            f"Holding Days: {profit_state.get('holding_days', 0)}",
+            f"Action: {action}",
+        ]
+    )
+
+
 def format_signal_message(
     signal: Any,
     price_usdt: float | None,
