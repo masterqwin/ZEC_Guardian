@@ -70,13 +70,17 @@ def format_signal_message(
     usd_thb_rate: float,
     plan: dict[str, Any] | None,
     error: str | None = None,
+    tried_sources: list[str] | None = None,
+    final_error: str | None = None,
+    data_source_used: str | None = None,
 ) -> str:
     if error:
         return "\n".join(
             [
                 "\u26a0\ufe0f ZEC GUARDIAN ERROR",
                 "Status: data fetch failed",
-                f"Reason: {error}",
+                f"tried_sources: {', '.join(tried_sources or []) or '-'}",
+                f"final_error: {final_error or error}",
                 f"Action: {NO_ENTRY_ACTION}",
                 "Risk: data_error",
             ]
@@ -87,6 +91,8 @@ def format_signal_message(
         f"{icon} ZEC SIGNAL {signal.grade}",
         _price_line(price_usdt, usd_thb_rate),
     ]
+    if data_source_used:
+        lines.append(f"Data Source: {data_source_used}")
 
     if signal.grade == "C":
         lines.append(f"Action: {NO_ENTRY_ACTION}")

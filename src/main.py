@@ -35,12 +35,19 @@ def run(dry_run_override: bool | None = None) -> int:
     state = load_state(config.data_dir)
     now = datetime.now(timezone.utc).isoformat()
     error: str | None = None
+    tried_sources: list[str] = []
+    data_source_used: str | None = None
+    final_error: str | None = None
     zec_price = None
     signal = None
     plan = None
 
     try:
-        zec, btc = fetch_market_pair(config)
+        market_pair = fetch_market_pair(config)
+        zec = market_pair.zec
+        btc = market_pair.btc
+        tried_sources = market_pair.tried_sources
+        data_source_used = market_pair.data_source_used
         zec_indicators = build_indicators(zec.candles)
         btc_indicators = build_indicators(btc.candles)
         news_guard = evaluate_news_guard()
@@ -59,6 +66,8 @@ def run(dry_run_override: bool | None = None) -> int:
                 "confidence": signal.confidence,
                 "reasons": signal.reasons,
                 "risk_flags": signal.risk_flags,
+                "data_source_used": data_source_used,
+                "tried_sources": tried_sources,
                 "indicators": zec_indicators,
                 "btc_guard": btc_indicators,
                 "news_guard": news_guard,
@@ -67,6 +76,8 @@ def run(dry_run_override: bool | None = None) -> int:
         )
     except MarketDataError as exc:
         error = str(exc)
+        tried_sources = exc.tried_sources
+        final_error = exc.final_error
         signal = evaluate_signal(0, 0, {}, {}, data_error=error)
         append_signal(
             config.data_dir,
@@ -77,11 +88,22 @@ def run(dry_run_override: bool | None = None) -> int:
                 "score": 0,
                 "confidence": 0,
                 "error": error,
+                "tried_sources": tried_sources,
+                "final_error": final_error,
                 "risk_flags": ["data_error"],
             },
         )
 
-    message = format_signal_message(signal, zec_price, config.usd_thb_rate, plan, error=error)
+    message = format_signal_message(
+        signal,
+        zec_price,
+        config.usd_thb_rate,
+        plan,
+        error=error,
+        tried_sources=tried_sources,
+        final_error=final_error,
+        data_source_used=data_source_used,
+    )
     send_alert = False
     alert_key = _event_key(signal.grade, plan, error)
 
