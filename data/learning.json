@@ -29,6 +29,36 @@
       "max_gain_percent": null,
       "max_drawdown_percent": null,
       "result_status": "PENDING"
+    },
+    {
+      "timestamp": "2026-06-15T19:58:00.036700+00:00",
+      "price_thb": 17067.11,
+      "price_usdt": 522.5190844834759,
+      "signal": "B",
+      "confidence": 62,
+      "reason": [
+        "ราคาอยู่ใกล้ EMA สำคัญ",
+        "BTC Guard ยังไม่พัง"
+      ],
+      "risk": [
+        "RSI ร้อนเกินไป"
+      ],
+      "data_source": "CoinGecko",
+      "position_state": {
+        "total_zec": 0,
+        "total_cost_thb": 0,
+        "average_cost_thb": 0,
+        "lots": []
+      },
+      "recommended_action": "WAIT / NO TRADE",
+      "outcome_1h": null,
+      "outcome_4h": null,
+      "outcome_24h": null,
+      "outcome_3d": null,
+      "outcome_7d": null,
+      "max_gain_percent": null,
+      "max_drawdown_percent": null,
+      "result_status": "PENDING"
     }
   ]
 }
