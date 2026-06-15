@@ -1,0 +1,109 @@
+{
+  "schema_version": 1,
+  "signals": [
+    {
+      "timestamp": "2026-06-15T16:05:34.251799+00:00",
+      "symbol": "ZECUSDT",
+      "price_usdt": 533.5,
+      "price_thb": 19472.75,
+      "grade": "B",
+      "score": 48,
+      "confidence": 48,
+      "reasons": [
+        "BTC Guard ยังไม่พัง"
+      ],
+      "risk_flags": [
+        "RSI ร้อนเกินไป"
+      ],
+      "indicators": {
+        "rsi14": 83.05615879238752,
+        "ema20": 499.9484160188721,
+        "ema50": 467.21316948559,
+        "ema200": 430.76857237103764,
+        "atr14": 12.09357142857144,
+        "volume_average20": 24192.6583,
+        "price_change_24h_percent": 26.95730807672171,
+        "trend_state": "strong_uptrend"
+      },
+      "btc_guard": {
+        "rsi14": 74.77071641360034,
+        "ema20": 65967.24302818121,
+        "ema50": 65150.60556487956,
+        "ema200": 63461.4775885004,
+        "atr14": 386.89642857142877,
+        "volume_average20": 940.220219,
+        "price_change_24h_percent": 5.000357351582204,
+        "trend_state": "strong_uptrend"
+      },
+      "news_guard": {
+        "ok": true,
+        "state": "not_connected",
+        "reason": "News guard is reserved for future free news/RSS checks; no negative news source is connected yet."
+      },
+      "plan": {
+        "mode": "no_position",
+        "action": "รอ",
+        "buy_zone_usdt": 533.5,
+        "buy_zone_thb": 19472.75,
+        "quantity_zec": 1,
+        "tp50_usdt": 560.175,
+        "tp100_usdt": 570.845,
+        "tp50_thb": 20446.39,
+        "tp100_thb": 20835.84,
+        "reserved_capital_thb": 12500.0
+      }
+    },
+    {
+      "timestamp": "2026-06-15T16:11:38.229029+00:00",
+      "symbol": "ZECUSDT",
+      "price_usdt": 535.21,
+      "price_thb": 19535.17,
+      "grade": "B",
+      "score": 48,
+      "confidence": 48,
+      "reasons": [
+        "BTC Guard ยังไม่พัง"
+      ],
+      "risk_flags": [
+        "RSI ร้อนเกินไป"
+      ],
+      "indicators": {
+        "rsi14": 84.20668228951382,
+        "ema20": 500.11127316172923,
+        "ema50": 467.2802283091194,
+        "ema200": 430.78558729641077,
+        "atr14": 12.35642857142858,
+        "volume_average20": 24399.02765,
+        "price_change_24h_percent": 27.364237780210367,
+        "trend_state": "strong_uptrend"
+      },
+      "btc_guard": {
+        "rsi14": 76.90424288641246,
+        "ema20": 65975.42302818122,
+        "ema50": 65153.97380017368,
+        "ema200": 63462.33221536607,
+        "atr14": 388.64214285714326,
+        "volume_average20": 946.3179729999999,
+        "price_change_24h_percent": 5.134680885037114,
+        "trend_state": "strong_uptrend"
+      },
+      "news_guard": {
+        "ok": true,
+        "state": "not_connected",
+        "reason": "News guard is reserved for future free news/RSS checks; no negative news source is connected yet."
+      },
+      "plan": {
+        "mode": "no_position",
+        "action": "รอ",
+        "buy_zone_usdt": 535.21,
+        "buy_zone_thb": 19535.17,
+        "quantity_zec": 1,
+        "tp50_usdt": 561.9705,
+        "tp100_usdt": 572.6747,
+        "tp50_thb": 20511.92,
+        "tp100_thb": 20902.63,
+        "reserved_capital_thb": 12500.0
+      }
+    }
+  ]
+}

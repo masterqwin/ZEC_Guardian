@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "position": {
+    "legs": [],
+    "closed_quantity_zec": 0
+  },
+  "alerts": {},
+  "daily_summary": {
+    "last_sent_date": "2026-06-15"
+  }
+}
