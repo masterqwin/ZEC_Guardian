@@ -104,6 +104,17 @@
         "tp100_thb": 20902.63,
         "reserved_capital_thb": 12500.0
       }
+    },
+    {
+      "timestamp": "2026-06-15T16:48:29.397257+00:00",
+      "symbol": "ZECUSDT",
+      "grade": "C",
+      "score": 0,
+      "confidence": 0,
+      "error": "Unable to fetch ZECUSDT market data: 451 Client Error:  for url: https://api.binance.com/api/v3/klines?symbol=ZECUSDT&interval=1h&limit=250",
+      "risk_flags": [
+        "data_error"
+      ]
     }
   ]
 }

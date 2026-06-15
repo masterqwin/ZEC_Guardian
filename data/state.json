@@ -4,7 +4,11 @@
     "legs": [],
     "closed_quantity_zec": 0
   },
-  "alerts": {},
+  "alerts": {
+    "error:data_fetch": {
+      "sent_at": "2026-06-15T16:48:29.583635+00:00"
+    }
+  },
   "daily_summary": {
     "last_sent_date": "2026-06-15"
   }
