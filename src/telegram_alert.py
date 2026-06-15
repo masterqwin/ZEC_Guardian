@@ -73,6 +73,8 @@ def format_v2_message(
     action: str,
     profit_state: dict[str, Any] | None = None,
     leg_plan: dict[str, Any] | None = None,
+    fx_rate: float | None = None,
+    fx_source: str | None = None,
 ) -> str:
     price_thb = float(price_thb or 0)
     price_usdt = float(price_usdt or 0)
@@ -84,6 +86,8 @@ def format_v2_message(
                 "\U0001f7e1 ZEC WAIT MODE",
                 f"Price: {price_thb:,.2f} THB / {price_usdt:,.4f} USDT",
                 f"Data Source: {data_source or '-'}",
+                f"FX Rate: {fx_rate or '-'}",
+                f"FX Source: {fx_source or '-'}",
                 f"Signal: {signal.grade}",
                 f"Action: {action}",
                 f"Reason: {' + '.join(signal.reasons)}",
@@ -99,6 +103,8 @@ def format_v2_message(
                 "Action: BUY LEG1",
                 f"Entry Price: {entry:,.2f} THB / {price_usdt:,.4f} USDT",
                 f"Data Source: {data_source or '-'}",
+                f"FX Rate: {fx_rate or '-'}",
+                f"FX Source: {fx_source or '-'}",
                 f"TP50: {entry * 1.05:,.2f} THB",
                 f"TP100: {entry * 1.10:,.2f} THB",
                 f"TP3: {entry * 1.15:,.2f} THB",
@@ -114,6 +120,8 @@ def format_v2_message(
                 "\U0001f525 ZEC LEG PLAN",
                 f"Action: BUY {leg_plan['next_leg_id']}",
                 f"Suggested Buy: {leg_plan['suggested_buy_price_thb']:,.2f} THB / {leg_plan['suggested_buy_price_usdt']:,.4f} USDT",
+                f"FX Rate: {fx_rate or '-'}",
+                f"FX Source: {fx_source or '-'}",
                 f"Suggested ZEC: {leg_plan['suggested_zec']}",
                 f"New Average Cost: {leg_plan['new_average_cost_thb']:,.2f} THB",
                 f"New TP50: {leg_plan['new_tp50']:,.2f} THB",
@@ -132,6 +140,8 @@ def format_v2_message(
             f"Average Cost: {profit_state.get('average_cost_thb', 0):,.2f} THB",
             f"Current Price: {price_thb:,.2f} THB / {price_usdt:,.4f} USDT",
             f"Data Source: {data_source or '-'}",
+            f"FX Rate: {fx_rate or '-'}",
+            f"FX Source: {fx_source or '-'}",
             f"Unrealized PNL: {profit_state.get('unrealized_pnl_thb', 0):,.2f} THB ({profit_state.get('unrealized_pnl_percent', 0)}%)",
             f"TP50: {profit_state.get('tp50_price', 0):,.2f} THB",
             f"TP100: {profit_state.get('tp100_price', 0):,.2f} THB",
@@ -152,6 +162,8 @@ def format_signal_message(
     tried_sources: list[str] | None = None,
     final_error: str | None = None,
     data_source_used: str | None = None,
+    fx_rate: float | None = None,
+    fx_source: str | None = None,
 ) -> str:
     if error:
         return "\n".join(
@@ -160,6 +172,8 @@ def format_signal_message(
                 "Status: data fetch failed",
                 f"tried_sources: {', '.join(tried_sources or []) or '-'}",
                 f"final_error: {final_error or error}",
+                f"FX Rate: {fx_rate or '-'}",
+                f"FX Source: {fx_source or '-'}",
                 f"Action: {NO_ENTRY_ACTION}",
                 "Risk: data_error",
             ]
@@ -172,6 +186,10 @@ def format_signal_message(
     ]
     if data_source_used:
         lines.append(f"Data Source: {data_source_used}")
+    if fx_rate:
+        lines.append(f"FX Rate: {fx_rate}")
+    if fx_source:
+        lines.append(f"FX Source: {fx_source}")
 
     if signal.grade == "C":
         lines.append(f"Action: {NO_ENTRY_ACTION}")

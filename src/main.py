@@ -7,6 +7,8 @@ from datetime import datetime, timezone
 from typing import Any
 
 from config import load_config
+from dataclasses import replace
+from fx_rate import fetch_usd_thb_rate
 from indicators import build_indicators
 from learning_engine import append_learning_record, build_learning_record
 from leg_planner import plan_next_leg
@@ -126,6 +128,7 @@ def run(dry_run_override: bool | None = None) -> int:
     profit_state: dict[str, Any] | None = None
     leg_plan: dict[str, Any] | None = None
     recommended_action = "WAIT / NO TRADE"
+    fx = fetch_usd_thb_rate(config)
 
     try:
         market_pair = fetch_market_pair(config)
@@ -138,8 +141,8 @@ def run(dry_run_override: bool | None = None) -> int:
         news_guard = evaluate_news_guard()
         signal = evaluate_signal(zec.price_usdt, zec.volume, zec_indicators, btc_indicators)
         zec_price_usdt = zec.price_usdt
-        zec_price_thb = round(zec.price_usdt * config.usd_thb_rate, 2)
-        plan = build_trade_plan(state, signal.grade, zec.price_usdt, config)
+        zec_price_thb = round(zec.price_usdt * fx.rate, 2)
+        plan = build_trade_plan(state, signal.grade, zec.price_usdt, replace(config, usd_thb_rate=fx.rate))
 
         if float(state["position"]["total_zec"]) > 0:
             profit_state = calculate_profit_state(state, zec_price_thb)
@@ -162,6 +165,8 @@ def run(dry_run_override: bool | None = None) -> int:
                 "risk_flags": signal.risk_flags,
                 "data_source_used": data_source_used,
                 "tried_sources": tried_sources,
+                "fx_rate": fx.rate,
+                "fx_source": fx.source,
                 "indicators": zec_indicators,
                 "btc_guard": btc_indicators,
                 "news_guard": news_guard,
@@ -207,6 +212,8 @@ def run(dry_run_override: bool | None = None) -> int:
             tried_sources=tried_sources,
             final_error=final_error,
             data_source_used=data_source_used,
+            fx_rate=fx.rate,
+            fx_source=fx.source,
         )
     else:
         message = format_v2_message(
@@ -218,6 +225,8 @@ def run(dry_run_override: bool | None = None) -> int:
             recommended_action,
             profit_state=profit_state,
             leg_plan=leg_plan,
+            fx_rate=fx.rate,
+            fx_source=fx.source,
         )
 
     alert_key = _event_key(signal.grade, recommended_action, error)

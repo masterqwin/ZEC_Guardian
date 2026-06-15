@@ -155,7 +155,9 @@ Defaults are in `src/config.py` and can be overridden by environment variables:
 - `SECOND_LEG_TP100_PERCENT=9`
 - `THIRD_LEG_TP50_PERCENT=9`
 - `THIRD_LEG_TP100_PERCENT=11`
-- `USD_THB_RATE=36.5`
+- `USD_THB_RATE=32.5`
+
+`USD_THB_RATE` is only a fallback. Live runs try `https://open.er-api.com/v6/latest/USD` first and show both `FX Rate` and `FX Source` in Telegram previews.
 
 ## GitHub Actions
 

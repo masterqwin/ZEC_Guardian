@@ -21,7 +21,8 @@ class Config:
     btc_symbol: str = os.getenv("BTC_SYMBOL", "BTCUSDT")
     interval: str = os.getenv("KLINE_INTERVAL", "1h")
     kline_limit: int = int(_float_env("KLINE_LIMIT", 250))
-    usd_thb_rate: float = _float_env("USD_THB_RATE", 36.5)
+    usd_thb_rate: float = _float_env("USD_THB_RATE", 32.5)
+    fx_api_url: str = os.getenv("FX_API_URL", "https://open.er-api.com/v6/latest/USD")
     capital_thb: float = _float_env("CAPITAL_THB", 50000)
     reserve_percent: float = _float_env("RESERVE_PERCENT", 25)
     zec_per_leg: float = _float_env("ZEC_PER_LEG", 1)
@@ -39,4 +40,3 @@ class Config:
 
 def load_config() -> Config:
     return Config()
-
