@@ -9,15 +9,24 @@ from typing import Any
 from config import load_config
 from dataclasses import replace
 from fx_rate import fetch_usd_thb_rate
+from btc_guard import evaluate_btc_guard
+from bounce_engine import estimate_bounce_probability
+from daily_summary import build_daily_summary
+from entry_score_engine import evaluate_entry_score
+from event_engine import detect_events, should_send_event
 from indicators import build_indicators
 from learning_engine import append_learning_record, build_learning_record
 from leg_planner import plan_next_leg
 from market_data import MarketDataError, fetch_market_pair
 from news_guard import evaluate_news_guard
+from opportunity_engine import evaluate_opportunity
 from portfolio import build_trade_plan
 from position_manager import buy_lot, recalculate_position, sell_all, sell_percent, sell_zec
 from profit_engine import action_from_profit, calculate_profit_state
+from qa_engine import build_qa_status
+from recovery_engine import estimate_recovery
 from signal_engine import evaluate_signal
+from signal_outcome_tracker import create_outcome_record, update_pending_outcomes
 from storage import append_signal, ensure_data_files, load_state, save_state
 from telegram_alert import (
     format_signal_message,
@@ -127,6 +136,13 @@ def run(dry_run_override: bool | None = None) -> int:
     plan: dict[str, Any] | None = None
     profit_state: dict[str, Any] | None = None
     leg_plan: dict[str, Any] | None = None
+    entry_result: dict[str, Any] | None = None
+    bounce_result: dict[str, Any] | None = None
+    recovery_result: dict[str, Any] | None = None
+    opportunity_result: dict[str, Any] | None = None
+    btc_guard_result: dict[str, Any] | None = None
+    event: dict[str, Any] | None = None
+    qa_status: dict[str, Any] | None = None
     recommended_action = "WAIT / NO TRADE"
     fx = fetch_usd_thb_rate(config)
 
@@ -137,19 +153,34 @@ def run(dry_run_override: bool | None = None) -> int:
         tried_sources = market_pair.tried_sources
         data_source_used = market_pair.data_source_used
         zec_indicators = build_indicators(zec.candles)
+        zec_indicators["current_volume"] = zec.volume
         btc_indicators = build_indicators(btc.candles)
         news_guard = evaluate_news_guard()
-        signal = evaluate_signal(zec.price_usdt, zec.volume, zec_indicators, btc_indicators)
+        btc_guard_result = evaluate_btc_guard(btc, btc_indicators)
+        direct_thb = zec.price_thb is not None
+        fx_used = not direct_thb
         zec_price_usdt = zec.price_usdt
-        zec_price_thb = round(zec.price_usdt * fx.rate, 2)
-        plan = build_trade_plan(state, signal.grade, zec.price_usdt, replace(config, usd_thb_rate=fx.rate))
+        zec_price_thb = round(float(zec.price_thb), 2) if direct_thb else round(zec.price_usdt * fx.rate, 2)
+        entry_result = evaluate_entry_score(zec_price_thb, zec_indicators, btc_guard_result)
+        bounce_result = estimate_bounce_probability(entry_result, btc_guard_result)
+        opportunity_result = evaluate_opportunity(entry_result["entry_score"], bounce_result["bounce_probability"])
+        signal = evaluate_signal(zec.price_usdt, zec.volume, zec_indicators, btc_indicators)
+        signal_grade_for_legacy = "A" if entry_result["label"] in {"ENTRY", "STRONG_ENTRY", "SS_PLUS"} else "B" if entry_result["label"] == "NEAR_ENTRY" else "C" if entry_result["label"] == "DANGER" else "B"
+        plan = build_trade_plan(state, signal_grade_for_legacy, zec.price_usdt, replace(config, usd_thb_rate=(fx.rate if fx_used else zec_price_thb / zec.price_usdt)))
 
         if float(state["position"]["total_zec"]) > 0:
             profit_state = calculate_profit_state(state, zec_price_thb)
             is_dip = zec_price_thb < float(state["position"]["average_cost_thb"])
-            if signal.grade == "A" and is_dip:
-                leg_plan = plan_next_leg(state, signal.grade, zec_price_thb, zec.price_usdt)
-        recommended_action = _recommended_action(state, signal.grade, profit_state, leg_plan)
+            if entry_result["label"] in {"ENTRY", "STRONG_ENTRY", "SS_PLUS"} and is_dip:
+                leg_plan = plan_next_leg(state, "A", zec_price_thb, zec.price_usdt)
+        recovery_result = estimate_recovery(state["position"], profit_state)
+        recommended_action = _recommended_action(state, signal_grade_for_legacy, profit_state, leg_plan)
+        if float(state["position"]["total_zec"]) <= 0 and entry_result["label"] == "NEAR_ENTRY":
+            recommended_action = "WATCH CLOSELY"
+        event_list = detect_events(zec_price_thb, state, entry_result["entry_score"], entry_result["label"])
+        event = event_list[0] if event_list else None
+        update_pending_outcomes(config.data_dir, zec_price_thb)
+        qa_status = build_qa_status(state, data_source_used, entry_result["label"], event.get("event_type") if event else None)
 
         append_signal(
             config.data_dir,
@@ -158,34 +189,59 @@ def run(dry_run_override: bool | None = None) -> int:
                 "symbol": config.zec_symbol,
                 "price_usdt": zec.price_usdt,
                 "price_thb": zec_price_thb,
-                "grade": signal.grade,
+                "grade": signal_grade_for_legacy,
+                "signal_type": entry_result["label"],
                 "score": signal.score,
                 "confidence": signal.confidence,
+                "entry_score": entry_result["entry_score"],
+                "bounce_probability": bounce_result["bounce_probability"],
+                "recovery_probability": recovery_result["recovery_7d"],
+                "opportunity_score": opportunity_result["opportunity_score"],
+                "btc_guard_status": btc_guard_result["status"],
+                "why_not_entry": entry_result["blockers"],
                 "reasons": signal.reasons,
                 "risk_flags": signal.risk_flags,
                 "data_source_used": data_source_used,
                 "tried_sources": tried_sources,
-                "fx_rate": fx.rate,
-                "fx_source": fx.source,
+                "fx_rate": fx.rate if fx_used else None,
+                "fx_source": fx.source if fx_used else None,
                 "indicators": zec_indicators,
                 "btc_guard": btc_indicators,
+                "btc_guard_detail": btc_guard_result,
                 "news_guard": news_guard,
                 "position": deepcopy(state["position"]),
                 "profit_state": profit_state,
                 "leg_plan": leg_plan,
+                "event": event,
+                "qa_status": qa_status,
                 "recommended_action": recommended_action,
                 "plan": plan,
             },
         )
-        append_learning_record(
-            config.data_dir,
-            build_learning_record(now, zec_price_thb, zec.price_usdt, signal, data_source_used, state["position"], recommended_action),
+        learning_record = build_learning_record(
+            now,
+            zec_price_thb,
+            zec.price_usdt,
+            signal,
+            data_source_used,
+            state["position"],
+            recommended_action,
+            entry_score=entry_result["entry_score"],
+            bounce_probability=bounce_result["bounce_probability"],
+            recovery_probability=recovery_result["recovery_7d"],
+            opportunity_score=opportunity_result["opportunity_score"],
+            btc_guard=btc_guard_result,
+            blockers=entry_result["blockers"],
+            event_type=event.get("event_type") if event else None,
+            signal_type=entry_result["label"],
         )
+        append_learning_record(config.data_dir, create_outcome_record(learning_record))
     except MarketDataError as exc:
         error = str(exc)
         tried_sources = exc.tried_sources
         final_error = exc.final_error
         signal = evaluate_signal(0, 0, {}, {}, data_error=error)
+        qa_status = build_qa_status(state, data_source_used, "DANGER", "SYSTEM_ERROR", error=error)
         append_signal(
             config.data_dir,
             {
@@ -225,13 +281,21 @@ def run(dry_run_override: bool | None = None) -> int:
             recommended_action,
             profit_state=profit_state,
             leg_plan=leg_plan,
-            fx_rate=fx.rate,
-            fx_source=fx.source,
+            fx_rate=fx.rate if (zec_price_thb is not None and zec_price_usdt and data_source_used != "CoinGecko") else None,
+            fx_source=fx.source if (zec_price_thb is not None and zec_price_usdt and data_source_used != "CoinGecko") else None,
+            entry_result=entry_result,
+            bounce_result=bounce_result,
+            opportunity_result=opportunity_result,
+            btc_guard=btc_guard_result,
+            event=event,
         )
 
-    alert_key = _event_key(signal.grade, recommended_action, error)
+    alert_key = _event_key(getattr(signal, "grade", "C"), recommended_action, error)
     send_alert = False
-    if error or signal.grade in {"A", "C"} or float(state["position"]["total_zec"]) > 0:
+    major_event = event and should_send_event(event, state)
+    if major_event:
+        send_alert = True
+    elif error or getattr(signal, "grade", "C") in {"A", "C"} or (entry_result and entry_result.get("label") in {"ENTRY", "STRONG_ENTRY", "SS_PLUS", "NEAR_ENTRY"}) or float(state["position"]["total_zec"]) > 0:
         if should_send_alert(state, alert_key):
             send_alert = True
             mark_alert_sent(state, alert_key)
@@ -246,6 +310,25 @@ def run(dry_run_override: bool | None = None) -> int:
         print("No Telegram alert needed after deduplication.")
         print(message)
 
+    if zec_price_thb is not None:
+        state.setdefault("alerts", {})["last_reference_price_thb"] = zec_price_thb
+        if entry_result:
+            state["alerts"]["last_entry_score"] = entry_result["entry_score"]
+            if entry_result["label"] in {"ENTRY", "STRONG_ENTRY", "SS_PLUS"}:
+                state["alerts"]["last_entry_signal_price_thb"] = zec_price_thb
+    state["last_daily_summary_preview"] = build_daily_summary(
+        state,
+        {
+            "qa_status": qa_status or {},
+            "price_thb": zec_price_thb or 0,
+            "btc_guard": btc_guard_result or {},
+            "signal_label": entry_result.get("label") if entry_result else "DANGER",
+            "entry_score": entry_result.get("entry_score") if entry_result else 0,
+            "bounce_probability": bounce_result.get("bounce_probability") if bounce_result else 0,
+            "opportunity_score": opportunity_result.get("opportunity_score") if opportunity_result else 0,
+            "last_event": event.get("event_type") if event else "-",
+        },
+    )
     save_state(config.data_dir, state)
     return 0
 

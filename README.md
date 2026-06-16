@@ -40,6 +40,20 @@ python src/main.py --dry-run
 python -m pytest
 ```
 
+## Dashboard Lite
+
+Run the local dashboard:
+
+```bash
+streamlit run src/dashboard.py
+```
+
+If Streamlit is not installed, the dashboard module can still render a plain text smoke view:
+
+```bash
+python src/dashboard.py
+```
+
 `--dry-run` prints the message payload and writes local JSON state, but it does not send Telegram messages.
 
 ## Telegram Test

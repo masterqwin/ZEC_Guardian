@@ -43,13 +43,51 @@ def kraken_payload(close_start=100):
     return {"error": [], "result": {"PAIR": rows, "last": "1"}}
 
 
-def test_binance_451_falls_back_to_kraken(monkeypatch):
+def coingecko_markets_payload(vs_currency="thb"):
+    if vs_currency == "thb":
+        return [
+            {"id": "zcash", "current_price": 17134, "total_volume": 1000000, "price_change_percentage_24h": -2, "price_change_percentage_7d_in_currency": -4, "market_cap": 100, "market_cap_rank": 90},
+            {"id": "bitcoin", "current_price": 2100000, "total_volume": 2000000, "price_change_percentage_24h": -1, "price_change_percentage_7d_in_currency": 2, "market_cap": 1000, "market_cap_rank": 1},
+        ]
+    return [
+        {"id": "zcash", "current_price": 527.2},
+        {"id": "bitcoin", "current_price": 65000},
+    ]
+
+
+def coingecko_chart_payload(close_start=100):
+    prices = []
+    volumes = []
+    for index in range(60):
+        prices.append([1700000000000 + (index * 3600000), close_start + index])
+        volumes.append([1700000000000 + (index * 3600000), 1000 + index])
+    return {"prices": prices, "total_volumes": volumes}
+
+
+def test_coingecko_direct_thb_price_is_primary(monkeypatch):
+    def fake_get(url, params=None, timeout=15):
+        if "coins/markets" in url:
+            return FakeResponse(coingecko_markets_payload(params.get("vs_currency")))
+        if "market_chart" in url:
+            return FakeResponse(coingecko_chart_payload())
+        return FakeResponse({}, status_code=500, reason="should not use fallback")
+
+    monkeypatch.setattr("market_data.requests.get", fake_get)
+
+    pair = fetch_market_pair(config())
+
+    assert pair.data_source_used == "CoinGecko"
+    assert pair.zec.price_thb == 17134
+    assert pair.zec.price_usdt == 527.2
+
+
+def test_coingecko_fail_falls_back_to_kraken(monkeypatch):
     calls = []
 
     def fake_get(url, params=None, timeout=15):
         calls.append(url)
-        if "api.binance.com" in url:
-            return FakeResponse({"msg": "restricted"}, status_code=451, reason="Unavailable For Legal Reasons")
+        if "coingecko" in url:
+            return FakeResponse({"error": "rate limited"}, status_code=429, reason="Rate Limited")
         return FakeResponse(kraken_payload())
 
     monkeypatch.setattr("market_data.requests.get", fake_get)
@@ -57,7 +95,7 @@ def test_binance_451_falls_back_to_kraken(monkeypatch):
     pair = fetch_market_pair(config())
 
     assert pair.data_source_used == "Kraken"
-    assert pair.tried_sources == ["Binance", "Kraken"]
+    assert pair.tried_sources == ["CoinGecko", "Kraken"]
     assert pair.zec.source == "Kraken"
     assert pair.btc.source == "Kraken"
 
@@ -71,8 +109,8 @@ def test_all_sources_fail_returns_market_data_error(monkeypatch):
     with pytest.raises(MarketDataError) as exc_info:
         fetch_market_pair(config())
 
-    assert exc_info.value.tried_sources == ["Binance", "Kraken", "CoinGecko"]
-    assert "CoinGecko" in exc_info.value.final_error
+    assert exc_info.value.tried_sources == ["CoinGecko", "Kraken", "Binance"]
+    assert "Binance" in exc_info.value.final_error
 
 
 def test_incomplete_data_cannot_be_signal_a():

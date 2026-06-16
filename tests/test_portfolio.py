@@ -9,7 +9,7 @@ from portfolio import average_cost_usdt, build_trade_plan
 
 def config():
     return SimpleNamespace(
-        usd_thb_rate=36.5,
+        usd_thb_rate=32.5,
         capital_thb=50000,
         reserve_percent=25,
         zec_per_leg=1,
@@ -57,4 +57,3 @@ def test_signal_a_after_pullback_suggests_second_leg():
     plan = build_trade_plan(state, "A", 90, config())
     assert plan["action"] == "แนะนำไม้ 2"
     assert plan["next_average_cost_usdt"] == 95
-

@@ -70,7 +70,7 @@ def migrate_state(raw_state: dict[str, Any] | None, capital_thb: float = 50000, 
         quantity = float(leg.get("quantity_zec", 0))
         if quantity <= 0:
             continue
-        entry_price_thb = float(leg.get("entry_price_thb") or (float(leg.get("entry_price_usdt", 0)) * 36.5))
+        entry_price_thb = float(leg.get("entry_price_thb") or (float(leg.get("entry_price_usdt", 0)) * 32.5))
         lots.append(
             {
                 "lot_id": f"L{index}",

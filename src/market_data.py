@@ -24,6 +24,11 @@ class MarketSnapshot:
     price_usdt: float
     volume: float
     source: str
+    price_thb: float | None = None
+    change_24h_percent: float | None = None
+    change_7d_percent: float | None = None
+    market_cap: float | None = None
+    rank: int | None = None
 
 
 @dataclass(frozen=True)
@@ -51,6 +56,21 @@ def _validate_candles(source: str, symbol: str, candles: list[Candle]) -> Market
         price_usdt=latest.close,
         volume=latest.volume,
         source=source,
+    )
+
+
+def _with_market_meta(snapshot: MarketSnapshot, meta: dict[str, Any]) -> MarketSnapshot:
+    return MarketSnapshot(
+        symbol=snapshot.symbol,
+        candles=snapshot.candles,
+        price_usdt=float(meta.get("current_price_usd") or snapshot.price_usdt),
+        volume=float(meta.get("total_volume") or snapshot.volume),
+        source=snapshot.source,
+        price_thb=float(meta["current_price_thb"]) if meta.get("current_price_thb") is not None else None,
+        change_24h_percent=meta.get("price_change_percentage_24h"),
+        change_7d_percent=meta.get("price_change_percentage_7d_in_currency"),
+        market_cap=meta.get("market_cap"),
+        rank=meta.get("market_cap_rank"),
     )
 
 
@@ -191,6 +211,52 @@ def _fetch_coingecko_market_chart(symbol: str, limit: int) -> MarketSnapshot:
     return _validate_candles("CoinGecko", symbol, candles)
 
 
+def _fetch_coingecko_markets() -> dict[str, dict[str, Any]]:
+    response = requests.get(
+        "https://api.coingecko.com/api/v3/coins/markets",
+        params={
+            "vs_currency": "thb",
+            "ids": "zcash,bitcoin",
+            "price_change_percentage": "24h,7d",
+        },
+        timeout=20,
+    )
+    response.raise_for_status()
+    rows = response.json()
+    if not isinstance(rows, list):
+        raise MarketDataError("Malformed CoinGecko markets response")
+    thb_rows = {row["id"]: row for row in rows}
+
+    response_usd = requests.get(
+        "https://api.coingecko.com/api/v3/coins/markets",
+        params={"vs_currency": "usd", "ids": "zcash,bitcoin", "price_change_percentage": "24h,7d"},
+        timeout=20,
+    )
+    response_usd.raise_for_status()
+    usd_rows = {row["id"]: row for row in response_usd.json()}
+    result: dict[str, dict[str, Any]] = {}
+    for coin_id in ["zcash", "bitcoin"]:
+        thb = thb_rows.get(coin_id) or {}
+        usd = usd_rows.get(coin_id) or {}
+        result[coin_id] = {
+            "current_price_thb": thb.get("current_price"),
+            "current_price_usd": usd.get("current_price"),
+            "total_volume": thb.get("total_volume"),
+            "price_change_percentage_24h": thb.get("price_change_percentage_24h"),
+            "price_change_percentage_7d_in_currency": thb.get("price_change_percentage_7d_in_currency"),
+            "market_cap": thb.get("market_cap"),
+            "market_cap_rank": thb.get("market_cap_rank"),
+        }
+    return result
+
+
+def _fetch_coingecko_pair(config: Any) -> tuple[MarketSnapshot, MarketSnapshot]:
+    markets = _fetch_coingecko_markets()
+    zec = _with_market_meta(_fetch_coingecko_market_chart(config.zec_symbol, config.kline_limit), markets["zcash"])
+    btc = _with_market_meta(_fetch_coingecko_market_chart(config.btc_symbol, config.kline_limit), markets["bitcoin"])
+    return zec, btc
+
+
 def _fetch_pair_from_source(source: str, config: Any) -> tuple[MarketSnapshot, MarketSnapshot]:
     if source == "Binance":
         return (
@@ -203,17 +269,14 @@ def _fetch_pair_from_source(source: str, config: Any) -> tuple[MarketSnapshot, M
             _fetch_kraken_ohlc(config.btc_symbol, config.interval, config.kline_limit),
         )
     if source == "CoinGecko":
-        return (
-            _fetch_coingecko_market_chart(config.zec_symbol, config.kline_limit),
-            _fetch_coingecko_market_chart(config.btc_symbol, config.kline_limit),
-        )
+        return _fetch_coingecko_pair(config)
     raise MarketDataError(f"Unknown market data source: {source}")
 
 
 def fetch_market_pair(config: Any) -> MarketPair:
     tried_sources: list[str] = []
     errors: list[str] = []
-    for source in ["Binance", "Kraken", "CoinGecko"]:
+    for source in ["CoinGecko", "Kraken", "Binance"]:
         tried_sources.append(source)
         try:
             zec, btc = _fetch_pair_from_source(source, config)

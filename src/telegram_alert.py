@@ -75,31 +75,73 @@ def format_v2_message(
     leg_plan: dict[str, Any] | None = None,
     fx_rate: float | None = None,
     fx_source: str | None = None,
+    entry_result: dict[str, Any] | None = None,
+    bounce_result: dict[str, Any] | None = None,
+    opportunity_result: dict[str, Any] | None = None,
+    btc_guard: dict[str, Any] | None = None,
+    event: dict[str, Any] | None = None,
 ) -> str:
     price_thb = float(price_thb or 0)
     price_usdt = float(price_usdt or 0)
     total_zec = float(position_state.get("total_zec", 0))
+    entry_result = entry_result or {}
+    bounce_result = bounce_result or {}
+    opportunity_result = opportunity_result or {}
+    btc_guard = btc_guard or {}
+    signal_label = entry_result.get("label", signal.grade)
+    if signal_label == "B":
+        signal_label = "WAIT"
+    elif signal_label == "A":
+        signal_label = "ENTRY"
+    elif signal_label == "C":
+        signal_label = "DANGER"
 
-    if total_zec <= 0 and signal.grade != "A":
+    if event:
         return "\n".join(
             [
-                "\U0001f7e1 ZEC WAIT MODE",
+                "⚠️ ZEC PRICE / SIGNAL EVENT",
+                f"Price: {price_thb:,.2f} THB / {price_usdt:,.4f} USDT",
+                f"Event: {event.get('event_type')}",
+                f"Entry Score: {entry_result.get('entry_score', '-')}",
+                f"Bounce Probability: {bounce_result.get('bounce_probability', '-')}",
+                f"Opportunity Score: {opportunity_result.get('opportunity_score', '-')}",
+                f"BTC Guard: {btc_guard.get('status', '-')}",
+                f"Action: {action}",
+                f"Why Not Entry: {'; '.join(entry_result.get('blockers', [])) or '-'}",
+            ]
+        )
+
+    if total_zec <= 0 and signal_label in {"WAIT", "DANGER", "NEAR_ENTRY"}:
+        title = "🟠 ZEC NEAR ENTRY" if signal_label == "NEAR_ENTRY" else "🟡 ZEC WAIT MODE"
+        return "\n".join(
+            [
+                title,
                 f"Price: {price_thb:,.2f} THB / {price_usdt:,.4f} USDT",
                 f"Data Source: {data_source or '-'}",
                 f"FX Rate: {fx_rate or '-'}",
                 f"FX Source: {fx_source or '-'}",
-                f"Signal: {signal.grade}",
+                f"Signal: {signal_label}",
+                f"Entry Score: {entry_result.get('entry_score', '-')}",
+                f"Bounce Probability: {bounce_result.get('bounce_probability', '-')}",
+                f"Opportunity Score: {opportunity_result.get('opportunity_score', '-')}",
+                f"BTC Guard: {btc_guard.get('status', '-')}",
+                f"BTC 24h: {btc_guard.get('change_24h', '-')}",
+                f"BTC 7d: {btc_guard.get('change_7d', '-')}",
                 f"Action: {action}",
-                f"Reason: {' + '.join(signal.reasons)}",
+                f"Why Not Entry: {'; '.join(entry_result.get('blockers', [])) or '-'}",
+                f"Missing Conditions: {'; '.join(entry_result.get('blockers', [])) or '-'}",
+                f"Reason: {' + '.join(entry_result.get('reasons', signal.reasons))}",
                 f"Risk: {' + '.join(signal.risk_flags) if signal.risk_flags else '-'}",
             ]
         )
 
-    if total_zec <= 0 and signal.grade == "A":
+    if total_zec <= 0 and signal_label in {"ENTRY", "STRONG_ENTRY", "SS_PLUS"}:
         entry = price_thb
+        title = "🚨 ZEC SS+ RARE SETUP" if signal_label == "SS_PLUS" else "🔥 ZEC ENTRY SIGNAL"
         return "\n".join(
             [
-                "\U0001f525 ZEC ENTRY SIGNAL",
+                title,
+                f"Signal: {signal_label}",
                 "Action: BUY LEG1",
                 f"Entry Price: {entry:,.2f} THB / {price_usdt:,.4f} USDT",
                 f"Data Source: {data_source or '-'}",
@@ -108,9 +150,14 @@ def format_v2_message(
                 f"TP50: {entry * 1.05:,.2f} THB",
                 f"TP100: {entry * 1.10:,.2f} THB",
                 f"TP3: {entry * 1.15:,.2f} THB",
+                f"Entry Score: {entry_result.get('entry_score', '-')}",
+                f"Bounce Probability: {bounce_result.get('bounce_probability', '-')}",
+                f"Opportunity Score: {opportunity_result.get('opportunity_score', '-')}",
+                f"BTC Guard: {btc_guard.get('status', '-')}",
                 f"Confidence: {signal.confidence}%",
-                f"Reason: {' + '.join(signal.reasons)}",
+                f"Reason: {' + '.join(entry_result.get('reasons', signal.reasons))}",
                 f"Risk: {' + '.join(signal.risk_flags) if signal.risk_flags else '-'}",
+                "Note: Very strong historical-style setup, not a guaranteed bounce." if signal_label == "SS_PLUS" else "Manual confirmation required. No auto trading.",
             ]
         )
 
@@ -142,6 +189,10 @@ def format_v2_message(
             f"Data Source: {data_source or '-'}",
             f"FX Rate: {fx_rate or '-'}",
             f"FX Source: {fx_source or '-'}",
+            f"Entry Score: {entry_result.get('entry_score', '-')}",
+            f"Bounce Probability: {bounce_result.get('bounce_probability', '-')}",
+            f"Opportunity Score: {opportunity_result.get('opportunity_score', '-')}",
+            f"BTC Guard: {btc_guard.get('status', '-')}",
             f"Unrealized PNL: {profit_state.get('unrealized_pnl_thb', 0):,.2f} THB ({profit_state.get('unrealized_pnl_percent', 0)}%)",
             f"TP50: {profit_state.get('tp50_price', 0):,.2f} THB",
             f"TP100: {profit_state.get('tp100_price', 0):,.2f} THB",
