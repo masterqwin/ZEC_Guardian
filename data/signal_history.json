@@ -78,6 +78,33 @@
         "BTC Guard WARNING"
       ],
       "data_source_used": "CoinGecko"
+    },
+    {
+      "timestamp": "2026-06-16T21:42:20.851914+00:00",
+      "symbol": "ZECUSDT",
+      "mode": "ZEC Guardian Mode",
+      "price_thb": 16371.47,
+      "price_usdt": 503.43,
+      "signal_type": "WAIT",
+      "entry_score": 39,
+      "bounce_probability": 31,
+      "recovery_probability": 65,
+      "opportunity_score": 43,
+      "btc_guard": {
+        "status": "WARNING",
+        "change_24h": -1.20268,
+        "change_7d": 4.506864859072079,
+        "reason": "BTC below EMA50 with negative momentum"
+      },
+      "event_type": "ROLLING_DROP_3",
+      "recommended_action": "WAIT / NO TRADE",
+      "why_not_entry": [
+        "RSI not in entry zone",
+        "support proximity not confirmed",
+        "volume confirmation missing",
+        "BTC Guard WARNING"
+      ],
+      "data_source_used": "CoinGecko"
     }
   ]
 }
