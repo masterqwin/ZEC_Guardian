@@ -1,6 +1,10 @@
-# ZEC Guardian
+# SEK Trade Guardian
 
-ZEC Guardian is a 24-hour ZEC monitoring assistant for GitHub Actions and Telegram alerts. It does not connect to an exchange account, does not place real orders, and does not auto buy or sell. It only analyzes public market data, creates trade plans, sends selected alerts, and records JSON state.
+Mode: `ZEC Guardian Mode`
+
+Repository and local project folder remain `ZEC_Guardian`.
+
+SEK Trade Guardian is a manual-only ZEC monitoring assistant for GitHub Actions and Telegram alerts. It does not connect to an exchange account, does not place real orders, and does not auto buy or sell. It only analyzes public market data, creates trade plans, sends selected alerts, records memory, and helps decision-making.
 
 ## What It Does
 
@@ -18,6 +22,7 @@ ZEC Guardian is a 24-hour ZEC monitoring assistant for GitHub Actions and Telegr
 
 - No exchange private API is used.
 - No order endpoint exists in this project.
+- No auto trading is implemented.
 - No token is hardcoded.
 - Signal `A` is blocked when data is incomplete or market data cannot be fetched.
 - Alerts are deduplicated so GitHub Actions does not spam every 5 minutes.
@@ -53,6 +58,35 @@ If Streamlit is not installed, the dashboard module can still render a plain tex
 ```bash
 python src/dashboard.py
 ```
+
+## Long-Term Memory
+
+The recent cache files remain:
+
+- `data/signals.json`: recent scan cache, capped at 2,000 records.
+- `data/learning.json`: active/pending learning memory.
+
+V1.1 adds long-term memory files:
+
+- `data/signal_history.json`: useful signal/event history, including NEAR_ENTRY, ENTRY, STRONG_ENTRY, SS_PLUS, DANGER, rolling drop events, FOMO warnings, and major state changes.
+- `data/outcome_history.json`: long-term signal outcomes for learning and missed-opportunity tracking.
+- `data/daily_summary.json`: daily QA/health summary history.
+
+Archive behavior:
+
+- `signal_history.json` keeps the latest 5,000 active records.
+- `outcome_history.json` keeps the latest 5,000 active records.
+- `daily_summary.json` keeps the latest 400 summaries.
+- Older records are moved to valid JSON files under `data/archive/`, grouped by year.
+
+Rolling 24h drop alerts:
+
+- `ROLLING_DROP_3`
+- `ROLLING_DROP_5`
+- `ROLLING_DROP_7`
+- `ROLLING_DROP_10`
+
+Escalation from 3 -> 5 -> 7 -> 10 can alert again, so slow cumulative drops are not hidden by normal deduplication.
 
 `--dry-run` prints the message payload and writes local JSON state, but it does not send Telegram messages.
 

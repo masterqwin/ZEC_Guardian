@@ -5,6 +5,7 @@ from pathlib import Path
 from typing import Any
 
 from storage import DEFAULT_LEARNING, read_json, write_json
+from storage import append_outcome_history
 
 
 TRACKED_SIGNALS = {"NEAR_ENTRY", "ENTRY", "STRONG_ENTRY", "SS_PLUS"}
@@ -46,6 +47,29 @@ def update_pending_outcomes(data_dir: str, current_price_thb: float, now: dateti
             record["result_status"] = "WIN"
         elif gain <= -5:
             record["result_status"] = "LOSS"
+        append_outcome_history(
+            data_dir,
+            {
+                "signal_id": record.get("timestamp"),
+                "created_at": record.get("timestamp"),
+                "signal_type": record.get("signal_type"),
+                "entry_price_thb": record.get("price_thb"),
+                "entry_score": record.get("entry_score"),
+                "bounce_probability": record.get("bounce_probability"),
+                "opportunity_score": record.get("opportunity_score"),
+                "outcome_1h": record.get("outcome_1h"),
+                "outcome_4h": record.get("outcome_4h"),
+                "outcome_24h": record.get("outcome_24h"),
+                "outcome_3d": record.get("outcome_3d"),
+                "outcome_7d": record.get("outcome_7d"),
+                "max_gain_percent": record.get("max_gain_percent"),
+                "max_drawdown_percent": record.get("max_drawdown_percent"),
+                "hit_5_percent": record.get("hit_5_percent"),
+                "hit_8_percent": record.get("hit_8_percent"),
+                "hit_10_percent": record.get("hit_10_percent"),
+                "result_status": record.get("result_status"),
+            },
+        )
         updated += 1
     write_json(path, payload)
     return updated

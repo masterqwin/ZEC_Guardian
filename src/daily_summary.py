@@ -9,7 +9,9 @@ def build_daily_summary(state: dict[str, Any], scan_context: dict[str, Any]) -> 
     counts = scan_context.get("signal_counts_today", {})
     return "\n".join(
         [
-            "📊 ZEC DAILY SUMMARY",
+            "🛡️ SEK Trade Guardian",
+            "Mode: ZEC Guardian Mode",
+            "📊 Daily Summary",
             "System: RUNNING",
             f"Scans Today: {qa.get('total_scans_today', 1)}",
             f"Errors: {qa.get('total_errors_today', 0)}",

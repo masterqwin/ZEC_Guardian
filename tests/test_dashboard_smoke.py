@@ -8,4 +8,5 @@ from dashboard import render_text_dashboard
 
 def test_dashboard_smoke_renders_data_without_crash():
     text = render_text_dashboard({"state": {"position": {"total_zec": 0}}, "signals": {"signals": []}})
-    assert "ZEC Guardian Dashboard Lite" in text
+    assert "SEK Trade Guardian" in text
+    assert "ZEC Guardian Mode" in text

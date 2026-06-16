@@ -1,4 +1,4 @@
-name: ZEC Guardian
+name: SEK Trade Guardian
 
 on:
   schedule:
@@ -23,7 +23,7 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      - name: Run ZEC Guardian
+      - name: Run SEK Trade Guardian
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
@@ -40,4 +40,3 @@ jobs:
             git commit -m "Update ZEC Guardian data"
             git push
           fi
-

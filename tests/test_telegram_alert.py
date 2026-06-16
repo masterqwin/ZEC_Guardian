@@ -29,6 +29,8 @@ def test_signal_a_without_position_shows_entry_targets():
     assert "Buy Zone: 100.0000 USDT" in message
     assert "TP50: 105 USDT" in message
     assert "TP100: 107 USDT" in message
+    assert "SEK Trade Guardian" in message
+    assert "ZEC Guardian Mode" in message
 
 
 def test_signal_b_without_position_hides_numeric_targets():

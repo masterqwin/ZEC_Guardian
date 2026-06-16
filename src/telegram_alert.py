@@ -8,12 +8,17 @@ import requests
 
 
 IMPORTANT_GRADES = {"A", "C"}
+BRAND_HEADER = "\U0001f6e1\ufe0f SEK Trade Guardian\nMode: ZEC Guardian Mode"
 NO_ENTRY_ACTION = "\u0e2b\u0e49\u0e32\u0e21\u0e40\u0e02\u0e49\u0e32 / \u0e07\u0e14\u0e0a\u0e49\u0e2d\u0e19"
 WAITING_TP_TEXT = "TP50/TP100: \u0e22\u0e31\u0e07\u0e44\u0e21\u0e48\u0e04\u0e33\u0e19\u0e27\u0e13\u0e08\u0e19\u0e01\u0e27\u0e48\u0e32\u0e08\u0e30\u0e21\u0e35 Entry Signal A \u0e2b\u0e23\u0e37\u0e2d\u0e21\u0e35 Position \u0e08\u0e23\u0e34\u0e07"
 
 
 def _now_iso() -> str:
     return datetime.now(timezone.utc).isoformat()
+
+
+def branded_message(message_type: str, lines: list[str]) -> str:
+    return "\n".join([BRAND_HEADER, message_type, *lines])
 
 
 def should_send_alert(state: dict[str, Any], event_key: str, dedupe_minutes: int = 360) -> bool:
@@ -64,6 +69,17 @@ def _append_position_targets(lines: list[str], plan: dict[str, Any]) -> None:
     lines.append(f"Holding Days: {plan['holding_days']}")
 
 
+def _normalize_signal_label(signal: Any, entry_result: dict[str, Any]) -> str:
+    label = entry_result.get("label", signal.grade)
+    if label == "B":
+        return "WAIT"
+    if label == "A":
+        return "ENTRY"
+    if label == "C":
+        return "DANGER"
+    return label
+
+
 def format_v2_message(
     signal: Any,
     price_thb: float | None,
@@ -88,20 +104,17 @@ def format_v2_message(
     bounce_result = bounce_result or {}
     opportunity_result = opportunity_result or {}
     btc_guard = btc_guard or {}
-    signal_label = entry_result.get("label", signal.grade)
-    if signal_label == "B":
-        signal_label = "WAIT"
-    elif signal_label == "A":
-        signal_label = "ENTRY"
-    elif signal_label == "C":
-        signal_label = "DANGER"
+    signal_label = _normalize_signal_label(signal, entry_result)
 
     if event:
-        return "\n".join(
+        event_type = event.get("event_type")
+        title = "\u26a0\ufe0f ZEC ROLLING 24H DROP" if str(event_type).startswith("ROLLING_DROP") else "\u26a0\ufe0f PRICE DROP ALERT"
+        lines = [f"Event: {event_type}", f"Price: {price_thb:,.2f} THB / {price_usdt:,.4f} USDT"]
+        if event.get("high_24h") is not None:
+            lines.append(f"24h High: {event['high_24h']:,.2f} THB")
+            lines.append(f"Drop From 24h High: {event['drop_from_24h_high_percent']}%")
+        lines.extend(
             [
-                "⚠️ ZEC PRICE / SIGNAL EVENT",
-                f"Price: {price_thb:,.2f} THB / {price_usdt:,.4f} USDT",
-                f"Event: {event.get('event_type')}",
                 f"Entry Score: {entry_result.get('entry_score', '-')}",
                 f"Bounce Probability: {bounce_result.get('bounce_probability', '-')}",
                 f"Opportunity Score: {opportunity_result.get('opportunity_score', '-')}",
@@ -110,12 +123,13 @@ def format_v2_message(
                 f"Why Not Entry: {'; '.join(entry_result.get('blockers', [])) or '-'}",
             ]
         )
+        return branded_message(title, lines)
 
     if total_zec <= 0 and signal_label in {"WAIT", "DANGER", "NEAR_ENTRY"}:
-        title = "🟠 ZEC NEAR ENTRY" if signal_label == "NEAR_ENTRY" else "🟡 ZEC WAIT MODE"
-        return "\n".join(
+        title = "\U0001f7e0 NEAR ENTRY" if signal_label == "NEAR_ENTRY" else "\U0001f7e1 WAIT MODE"
+        return branded_message(
+            title,
             [
-                title,
                 f"Price: {price_thb:,.2f} THB / {price_usdt:,.4f} USDT",
                 f"Data Source: {data_source or '-'}",
                 f"FX Rate: {fx_rate or '-'}",
@@ -132,15 +146,15 @@ def format_v2_message(
                 f"Missing Conditions: {'; '.join(entry_result.get('blockers', [])) or '-'}",
                 f"Reason: {' + '.join(entry_result.get('reasons', signal.reasons))}",
                 f"Risk: {' + '.join(signal.risk_flags) if signal.risk_flags else '-'}",
-            ]
+            ],
         )
 
     if total_zec <= 0 and signal_label in {"ENTRY", "STRONG_ENTRY", "SS_PLUS"}:
         entry = price_thb
-        title = "🚨 ZEC SS+ RARE SETUP" if signal_label == "SS_PLUS" else "🔥 ZEC ENTRY SIGNAL"
-        return "\n".join(
+        title = "\U0001f6a8 SS+ RARE SETUP" if signal_label == "SS_PLUS" else "\U0001f525 ENTRY SIGNAL"
+        return branded_message(
+            title,
             [
-                title,
                 f"Signal: {signal_label}",
                 "Action: BUY LEG1",
                 f"Entry Price: {entry:,.2f} THB / {price_usdt:,.4f} USDT",
@@ -158,13 +172,13 @@ def format_v2_message(
                 f"Reason: {' + '.join(entry_result.get('reasons', signal.reasons))}",
                 f"Risk: {' + '.join(signal.risk_flags) if signal.risk_flags else '-'}",
                 "Note: Very strong historical-style setup, not a guaranteed bounce." if signal_label == "SS_PLUS" else "Manual confirmation required. No auto trading.",
-            ]
+            ],
         )
 
     if leg_plan and leg_plan.get("can_buy") and signal.grade == "A":
-        return "\n".join(
+        return branded_message(
+            "\U0001f525 LEG PLAN",
             [
-                "\U0001f525 ZEC LEG PLAN",
                 f"Action: BUY {leg_plan['next_leg_id']}",
                 f"Suggested Buy: {leg_plan['suggested_buy_price_thb']:,.2f} THB / {leg_plan['suggested_buy_price_usdt']:,.4f} USDT",
                 f"FX Rate: {fx_rate or '-'}",
@@ -175,13 +189,13 @@ def format_v2_message(
                 f"New TP100: {leg_plan['new_tp100']:,.2f} THB",
                 f"Cash After Buy: {leg_plan['cash_after_buy']:,.2f} THB",
                 f"Reason: {leg_plan['reason']}",
-            ]
+            ],
         )
 
     profit_state = profit_state or {}
-    return "\n".join(
+    return branded_message(
+        "\U0001f4ca POSITION UPDATE",
         [
-            "\U0001f4ca ZEC POSITION UPDATE",
             f"Total ZEC: {profit_state.get('total_zec', total_zec)}",
             f"Total Cost: {profit_state.get('total_cost_thb', 0):,.2f} THB",
             f"Average Cost: {profit_state.get('average_cost_thb', 0):,.2f} THB",
@@ -200,7 +214,7 @@ def format_v2_message(
             f"Amount to sell at TP50: {profit_state.get('amount_to_sell_50_percent', 0)} ZEC",
             f"Holding Days: {profit_state.get('holding_days', 0)}",
             f"Action: {action}",
-        ]
+        ],
     )
 
 
@@ -217,9 +231,9 @@ def format_signal_message(
     fx_source: str | None = None,
 ) -> str:
     if error:
-        return "\n".join(
+        return branded_message(
+            "\u26a0\ufe0f ERROR",
             [
-                "\u26a0\ufe0f ZEC GUARDIAN ERROR",
                 "Status: data fetch failed",
                 f"tried_sources: {', '.join(tried_sources or []) or '-'}",
                 f"final_error: {final_error or error}",
@@ -227,25 +241,18 @@ def format_signal_message(
                 f"FX Source: {fx_source or '-'}",
                 f"Action: {NO_ENTRY_ACTION}",
                 "Risk: data_error",
-            ]
+            ],
         )
 
     icon = "\U0001f525" if signal.grade == "A" else "\U0001f7e1" if signal.grade == "B" else "\U0001f6a8"
-    lines = [
-        f"{icon} ZEC SIGNAL {signal.grade}",
-        _price_line(price_usdt, usd_thb_rate),
-    ]
+    lines = [f"{icon} ZEC SIGNAL {signal.grade}", _price_line(price_usdt, usd_thb_rate)]
     if data_source_used:
         lines.append(f"Data Source: {data_source_used}")
     if fx_rate:
         lines.append(f"FX Rate: {fx_rate}")
     if fx_source:
         lines.append(f"FX Source: {fx_source}")
-
-    if signal.grade == "C":
-        lines.append(f"Action: {NO_ENTRY_ACTION}")
-    else:
-        lines.append(f"Action: {plan.get('action', signal.action) if plan else signal.action}")
+    lines.append(f"Action: {NO_ENTRY_ACTION}" if signal.grade == "C" else f"Action: {plan.get('action', signal.action) if plan else signal.action}")
 
     if plan and plan.get("mode") == "has_position":
         _append_position_targets(lines, plan)
@@ -254,17 +261,13 @@ def format_signal_message(
     elif signal.grade == "B" and plan and plan.get("mode") == "no_position":
         lines.append(WAITING_TP_TEXT)
 
-    lines.extend(
-        [
-            f"Confidence: {signal.confidence}%",
-            f"Reason: {' + '.join(signal.reasons)}",
-        ]
-    )
+    lines.append(f"Confidence: {signal.confidence}%")
+    lines.append(f"Reason: {' + '.join(signal.reasons)}")
     if signal.risk_flags:
         lines.append(f"Risk: {' + '.join(signal.risk_flags)}")
     elif signal.grade == "C":
         lines.append("Risk: unknown_risk")
-    return "\n".join(lines)
+    return branded_message("ZEC SIGNAL", lines)
 
 
 def send_telegram_message(token: str, chat_id: str, message: str, dry_run: bool = False) -> bool:

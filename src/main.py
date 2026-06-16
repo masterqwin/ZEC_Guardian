@@ -28,6 +28,7 @@ from recovery_engine import estimate_recovery
 from signal_engine import evaluate_signal
 from signal_outcome_tracker import create_outcome_record, update_pending_outcomes
 from storage import append_signal, ensure_data_files, load_state, save_state
+from storage import append_daily_summary_history, append_outcome_history, append_signal_history
 from telegram_alert import (
     format_signal_message,
     format_v2_message,
@@ -177,7 +178,14 @@ def run(dry_run_override: bool | None = None) -> int:
         recommended_action = _recommended_action(state, signal_grade_for_legacy, profit_state, leg_plan)
         if float(state["position"]["total_zec"]) <= 0 and entry_result["label"] == "NEAR_ENTRY":
             recommended_action = "WATCH CLOSELY"
-        event_list = detect_events(zec_price_thb, state, entry_result["entry_score"], entry_result["label"])
+        recent_candles = zec.candles[-24:] if len(zec.candles) >= 24 else zec.candles
+        high_24h = max((c.high for c in recent_candles), default=None)
+        if zec.price_thb is not None and zec.price_usdt:
+            thb_ratio = zec.price_thb / zec.price_usdt
+            high_24h = high_24h * thb_ratio if high_24h else None
+        elif high_24h:
+            high_24h = high_24h * fx.rate
+        event_list = detect_events(zec_price_thb, state, entry_result["entry_score"], entry_result["label"], high_24h=high_24h)
         event = event_list[0] if event_list else None
         update_pending_outcomes(config.data_dir, zec_price_thb)
         qa_status = build_qa_status(state, data_source_used, entry_result["label"], event.get("event_type") if event else None)
@@ -218,6 +226,28 @@ def run(dry_run_override: bool | None = None) -> int:
                 "plan": plan,
             },
         )
+        useful_signal = entry_result["label"] in {"NEAR_ENTRY", "ENTRY", "STRONG_ENTRY", "SS_PLUS", "DANGER"} or event is not None
+        if useful_signal:
+            append_signal_history(
+                config.data_dir,
+                {
+                    "timestamp": now,
+                    "symbol": config.zec_symbol,
+                    "mode": "ZEC Guardian Mode",
+                    "price_thb": zec_price_thb,
+                    "price_usdt": zec.price_usdt,
+                    "signal_type": entry_result["label"],
+                    "entry_score": entry_result["entry_score"],
+                    "bounce_probability": bounce_result["bounce_probability"],
+                    "recovery_probability": recovery_result["recovery_7d"],
+                    "opportunity_score": opportunity_result["opportunity_score"],
+                    "btc_guard": btc_guard_result,
+                    "event_type": event.get("event_type") if event else None,
+                    "recommended_action": recommended_action,
+                    "why_not_entry": entry_result["blockers"],
+                    "data_source_used": data_source_used,
+                },
+            )
         learning_record = build_learning_record(
             now,
             zec_price_thb,
@@ -235,7 +265,32 @@ def run(dry_run_override: bool | None = None) -> int:
             event_type=event.get("event_type") if event else None,
             signal_type=entry_result["label"],
         )
-        append_learning_record(config.data_dir, create_outcome_record(learning_record))
+        learning_record = create_outcome_record(learning_record)
+        append_learning_record(config.data_dir, learning_record)
+        if learning_record.get("result_status") == "PENDING" and learning_record.get("signal_type") in {"NEAR_ENTRY", "ENTRY", "STRONG_ENTRY", "SS_PLUS"}:
+            append_outcome_history(
+                config.data_dir,
+                {
+                    "signal_id": learning_record.get("timestamp"),
+                    "created_at": learning_record.get("timestamp"),
+                    "signal_type": learning_record.get("signal_type"),
+                    "entry_price_thb": learning_record.get("price_thb"),
+                    "entry_score": learning_record.get("entry_score"),
+                    "bounce_probability": learning_record.get("bounce_probability"),
+                    "opportunity_score": learning_record.get("opportunity_score"),
+                    "outcome_1h": None,
+                    "outcome_4h": None,
+                    "outcome_24h": None,
+                    "outcome_3d": None,
+                    "outcome_7d": None,
+                    "max_gain_percent": None,
+                    "max_drawdown_percent": None,
+                    "hit_5_percent": False,
+                    "hit_8_percent": False,
+                    "hit_10_percent": False,
+                    "result_status": "PENDING",
+                },
+            )
     except MarketDataError as exc:
         error = str(exc)
         tried_sources = exc.tried_sources
@@ -317,6 +372,26 @@ def run(dry_run_override: bool | None = None) -> int:
         send_alert = True
         mark_daily_summary_sent(state)
         message = daily_summary_message
+        append_daily_summary_history(
+            config.data_dir,
+            {
+                "date": datetime.now(timezone.utc).date().isoformat(),
+                "system_status": "RUNNING",
+                "scans_today": (qa_status or {}).get("total_scans_today", 1),
+                "errors_today": (qa_status or {}).get("total_errors_today", 0),
+                "last_scan_at": (qa_status or {}).get("last_scan_at"),
+                "current_price_thb": zec_price_thb,
+                "btc_guard": btc_guard_result,
+                "current_signal": entry_result.get("label") if entry_result else "DANGER",
+                "entry_score": entry_result.get("entry_score") if entry_result else 0,
+                "bounce_probability": bounce_result.get("bounce_probability") if bounce_result else 0,
+                "opportunity_score": opportunity_result.get("opportunity_score") if opportunity_result else 0,
+                "signal_counts": {},
+                "position_total_zec": state.get("position", {}).get("total_zec", 0),
+                "near_entry": bool(entry_result and entry_result.get("entry_score", 0) >= 70),
+                "qa_status": qa_status,
+            },
+        )
 
     if send_alert:
         send_telegram_message(config.telegram_bot_token, config.telegram_chat_id, message, dry_run=dry_run)
@@ -328,6 +403,8 @@ def run(dry_run_override: bool | None = None) -> int:
         state.setdefault("alerts", {})["last_reference_price_thb"] = zec_price_thb
         if entry_result:
             state["alerts"]["last_entry_score"] = entry_result["entry_score"]
+            if event and str(event.get("event_type")).startswith("ROLLING_DROP"):
+                state["alerts"]["last_rolling_drop_event"] = event.get("event_type")
             if entry_result["label"] in {"ENTRY", "STRONG_ENTRY", "SS_PLUS"}:
                 state["alerts"]["last_entry_signal_price_thb"] = zec_price_thb
     state["last_daily_summary_preview"] = daily_summary_message
