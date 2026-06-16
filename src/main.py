@@ -290,6 +290,19 @@ def run(dry_run_override: bool | None = None) -> int:
             event=event,
         )
 
+    daily_summary_message = build_daily_summary(
+        state,
+        {
+            "qa_status": qa_status or {},
+            "price_thb": zec_price_thb or 0,
+            "btc_guard": btc_guard_result or {},
+            "signal_label": entry_result.get("label") if entry_result else "DANGER",
+            "entry_score": entry_result.get("entry_score") if entry_result else 0,
+            "bounce_probability": bounce_result.get("bounce_probability") if bounce_result else 0,
+            "opportunity_score": opportunity_result.get("opportunity_score") if opportunity_result else 0,
+            "last_event": event.get("event_type") if event else "-",
+        },
+    )
     alert_key = _event_key(getattr(signal, "grade", "C"), recommended_action, error)
     send_alert = False
     major_event = event and should_send_event(event, state)
@@ -303,6 +316,7 @@ def run(dry_run_override: bool | None = None) -> int:
     if not send_alert and should_send_daily_summary(state):
         send_alert = True
         mark_daily_summary_sent(state)
+        message = daily_summary_message
 
     if send_alert:
         send_telegram_message(config.telegram_bot_token, config.telegram_chat_id, message, dry_run=dry_run)
@@ -316,19 +330,7 @@ def run(dry_run_override: bool | None = None) -> int:
             state["alerts"]["last_entry_score"] = entry_result["entry_score"]
             if entry_result["label"] in {"ENTRY", "STRONG_ENTRY", "SS_PLUS"}:
                 state["alerts"]["last_entry_signal_price_thb"] = zec_price_thb
-    state["last_daily_summary_preview"] = build_daily_summary(
-        state,
-        {
-            "qa_status": qa_status or {},
-            "price_thb": zec_price_thb or 0,
-            "btc_guard": btc_guard_result or {},
-            "signal_label": entry_result.get("label") if entry_result else "DANGER",
-            "entry_score": entry_result.get("entry_score") if entry_result else 0,
-            "bounce_probability": bounce_result.get("bounce_probability") if bounce_result else 0,
-            "opportunity_score": opportunity_result.get("opportunity_score") if opportunity_result else 0,
-            "last_event": event.get("event_type") if event else "-",
-        },
-    )
+    state["last_daily_summary_preview"] = daily_summary_message
     save_state(config.data_dir, state)
     return 0
 
