@@ -61,10 +61,10 @@ def detect_events(current_price: float, state: dict[str, Any], entry_score: int,
 
 def should_send_event(event: dict[str, Any], state: dict[str, Any]) -> bool:
     event_type = event.get("event_type")
-    if event_type in MAJOR_DROP_EVENTS or str(event_type).endswith("_REACHED"):
-        return True
     if event_type in ROLLING_DROP_EVENTS:
         last = state.get("alerts", {}).get("last_rolling_drop_event")
         order = {"ROLLING_DROP_3": 3, "ROLLING_DROP_5": 5, "ROLLING_DROP_7": 7, "ROLLING_DROP_10": 10}
         return order.get(event_type, 0) > order.get(last, 0)
+    if event_type in MAJOR_DROP_EVENTS or str(event_type).endswith("_REACHED"):
+        return True
     return event_type not in state.get("alerts", {})

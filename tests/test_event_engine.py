@@ -22,9 +22,24 @@ def test_rolling_24h_drop_5_triggers():
     assert event["event_type"] == "ROLLING_DROP_5"
 
 
+def test_first_rolling_drop_5_sends():
+    state = {"alerts": {}}
+    assert should_send_event({"event_type": "ROLLING_DROP_5"}, state) is True
+
+
 def test_rolling_drop_escalation_5_to_7_sends_again():
     state = {"alerts": {"last_rolling_drop_event": "ROLLING_DROP_5"}}
     assert should_send_event({"event_type": "ROLLING_DROP_7"}, state) is True
+
+
+def test_same_rolling_drop_5_does_not_send_again():
+    state = {"alerts": {"last_rolling_drop_event": "ROLLING_DROP_5"}}
+    assert should_send_event({"event_type": "ROLLING_DROP_5"}, state) is False
+
+
+def test_same_rolling_drop_7_does_not_send_again():
+    state = {"alerts": {"last_rolling_drop_event": "ROLLING_DROP_7"}}
+    assert should_send_event({"event_type": "ROLLING_DROP_7"}, state) is False
 
 
 def test_dedup_does_not_suppress_first_rolling_drop_7():

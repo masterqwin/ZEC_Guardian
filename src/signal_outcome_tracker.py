@@ -5,7 +5,7 @@ from pathlib import Path
 from typing import Any
 
 from storage import DEFAULT_LEARNING, read_json, write_json
-from storage import append_outcome_history
+from storage import upsert_outcome_history
 
 
 TRACKED_SIGNALS = {"NEAR_ENTRY", "ENTRY", "STRONG_ENTRY", "SS_PLUS"}
@@ -47,7 +47,7 @@ def update_pending_outcomes(data_dir: str, current_price_thb: float, now: dateti
             record["result_status"] = "WIN"
         elif gain <= -5:
             record["result_status"] = "LOSS"
-        append_outcome_history(
+        upsert_outcome_history(
             data_dir,
             {
                 "signal_id": record.get("timestamp"),

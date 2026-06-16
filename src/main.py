@@ -395,6 +395,9 @@ def run(dry_run_override: bool | None = None) -> int:
 
     if send_alert:
         send_telegram_message(config.telegram_bot_token, config.telegram_chat_id, message, dry_run=dry_run)
+        if event and str(event.get("event_type")).startswith("ROLLING_DROP"):
+            state.setdefault("alerts", {})["last_rolling_drop_event"] = event.get("event_type")
+            state["alerts"]["last_rolling_drop_sent_at"] = now
     elif dry_run:
         print("No Telegram alert needed after deduplication.")
         print(message)
@@ -403,8 +406,6 @@ def run(dry_run_override: bool | None = None) -> int:
         state.setdefault("alerts", {})["last_reference_price_thb"] = zec_price_thb
         if entry_result:
             state["alerts"]["last_entry_score"] = entry_result["entry_score"]
-            if event and str(event.get("event_type")).startswith("ROLLING_DROP"):
-                state["alerts"]["last_rolling_drop_event"] = event.get("event_type")
             if entry_result["label"] in {"ENTRY", "STRONG_ENTRY", "SS_PLUS"}:
                 state["alerts"]["last_entry_signal_price_thb"] = zec_price_thb
     state["last_daily_summary_preview"] = daily_summary_message

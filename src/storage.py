@@ -113,6 +113,27 @@ def append_outcome_history(data_dir: str, record: dict[str, Any]) -> None:
     archive_if_needed(data_dir, "outcome_history.json", "outcomes", 5000, "outcome_history")
 
 
+def upsert_outcome_history(data_dir: str, record: dict[str, Any]) -> None:
+    signal_id = record.get("signal_id")
+    if not signal_id:
+        append_outcome_history(data_dir, record)
+        return
+
+    path = Path(data_dir) / "outcome_history.json"
+    payload = read_json(path, DEFAULT_OUTCOME_HISTORY)
+    outcomes = payload.setdefault("outcomes", [])
+    for index, existing in enumerate(outcomes):
+        if existing.get("signal_id") == signal_id:
+            outcomes[index] = {**existing, **record}
+            write_json(path, payload)
+            archive_if_needed(data_dir, "outcome_history.json", "outcomes", 5000, "outcome_history")
+            return
+
+    outcomes.append(record)
+    write_json(path, payload)
+    archive_if_needed(data_dir, "outcome_history.json", "outcomes", 5000, "outcome_history")
+
+
 def append_daily_summary_history(data_dir: str, record: dict[str, Any]) -> None:
     path = Path(data_dir) / "daily_summary.json"
     payload = read_json(path, DEFAULT_DAILY_SUMMARY)
