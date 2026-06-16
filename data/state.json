@@ -20,8 +20,12 @@
     "zec_per_leg": 1
   },
   "last_action": null,
-  "updated_at": "2026-06-16T10:22:20.451167+00:00",
-  "alerts": {},
+  "updated_at": "2026-06-16T15:24:08.673220+00:00",
+  "alerts": {
+    "signal:A:BUY LEG1": {
+      "sent_at": "2026-06-16T15:24:09.373712+00:00"
+    }
+  },
   "daily_summary": {
     "last_sent_date": "2026-06-16"
   }

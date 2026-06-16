@@ -171,6 +171,36 @@
       "max_gain_percent": null,
       "max_drawdown_percent": null,
       "result_status": "PENDING"
+    },
+    {
+      "timestamp": "2026-06-16T15:24:08.673223+00:00",
+      "price_thb": 16138.16,
+      "price_usdt": 495.89,
+      "signal": "A",
+      "confidence": 94,
+      "reason": [
+        "RSI เริ่มฟื้น",
+        "ราคาอยู่ใกล้ EMA สำคัญ",
+        "volume ขายอ่อนลง",
+        "BTC Guard ยังไม่พัง"
+      ],
+      "risk": [],
+      "data_source": "Kraken",
+      "position_state": {
+        "total_zec": 0,
+        "total_cost_thb": 0,
+        "average_cost_thb": 0,
+        "lots": []
+      },
+      "recommended_action": "BUY LEG1",
+      "outcome_1h": null,
+      "outcome_4h": null,
+      "outcome_24h": null,
+      "outcome_3d": null,
+      "outcome_7d": null,
+      "max_gain_percent": null,
+      "max_drawdown_percent": null,
+      "result_status": "PENDING"
     }
   ]
 }
