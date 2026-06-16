@@ -4,14 +4,15 @@ from types import SimpleNamespace
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
+from daily_summary import build_daily_summary
 from telegram_alert import format_signal_message, format_v2_message
 
 
-def signal(grade, risk_flags=None):
+def signal(grade, risk_flags=None, confidence=70):
     return SimpleNamespace(
         grade=grade,
         action="raw action",
-        confidence=70,
+        confidence=confidence,
         reasons=["reason one"],
         risk_flags=risk_flags or [],
     )
@@ -99,6 +100,34 @@ def test_v2_wait_mode_does_not_show_tp_numbers():
     assert "TP50" not in message
     assert "TP100" not in message
     assert "Action: WAIT / NO TRADE" in message
+    assert "รอดูต่อ ยังไม่ควรเข้า" in message
+
+
+def test_v2_wait_mode_has_bilingual_action_and_reasons():
+    message = format_v2_message(
+        signal("B"),
+        17000,
+        532.7,
+        "Kraken",
+        {"total_zec": 0, "total_cost_thb": 0, "average_cost_thb": 0, "lots": []},
+        "WAIT / NO TRADE",
+        entry_result={
+            "label": "B",
+            "entry_score": 56,
+            "blockers": ["support proximity not confirmed", "volume confirmation missing"],
+        },
+        bounce_result={"bounce_probability": 48},
+        opportunity_result={"opportunity_score": 57},
+        btc_guard={"status": "WARNING"},
+    )
+
+    assert "Entry Score: 56" in message
+    assert "(คะแนนความน่าสนใจในการเข้า)" in message
+    assert "Action: WAIT / NO TRADE" in message
+    assert "รอดูต่อ ยังไม่ควรเข้า" in message
+    assert "ราคาใกล้แนวรับยังไม่ชัด" in message
+    assert "ปริมาณซื้อยังไม่ยืนยัน" in message
+    assert "(BTC ตลาดใหญ่เริ่มอ่อนแรง)" in message
 
 
 def test_v2_position_update_shows_average_cost_and_unrealized_pnl():
@@ -125,3 +154,88 @@ def test_v2_position_update_shows_average_cost_and_unrealized_pnl():
 
     assert "Average Cost: 16,000.00 THB" in message
     assert "Unrealized PNL: 1,600.00 THB (10%)" in message
+
+
+def test_v2_entry_signal_has_bilingual_targets_and_confidence():
+    message = format_v2_message(
+        signal("A", confidence=94),
+        17000,
+        532.7,
+        "Kraken",
+        {"total_zec": 0, "total_cost_thb": 0, "average_cost_thb": 0, "lots": []},
+        "BUY LEG1",
+        entry_result={"label": "A", "entry_score": 94, "reasons": ["reason one"]},
+        bounce_result={"bounce_probability": 82},
+        opportunity_result={"opportunity_score": 88},
+        btc_guard={"status": "SAFE"},
+    )
+
+    assert "Action: BUY LEG1" in message
+    assert "เปิดไม้แรก" in message
+    assert "กำไรประมาณ +5%" in message
+    assert "กำไรประมาณ +10%" in message
+    assert "กำไรประมาณ +15%" in message
+    assert "ความมั่นใจสูง" in message
+
+
+def test_v2_rolling_drop_has_bilingual_event_text():
+    message = format_v2_message(
+        signal("B"),
+        17000,
+        532.7,
+        "Kraken",
+        {"total_zec": 0, "total_cost_thb": 0, "average_cost_thb": 0, "lots": []},
+        "WAIT / NO TRADE",
+        entry_result={"label": "B", "entry_score": 56, "blockers": ["BTC Guard WARNING"]},
+        bounce_result={"bounce_probability": 48},
+        opportunity_result={"opportunity_score": 57},
+        btc_guard={"status": "WARNING"},
+        event={"event_type": "ROLLING_DROP_5", "high_24h": 17908.21, "drop_from_24h_high_percent": -5.07},
+    )
+
+    assert "⚠️ ZEC ROLLING 24H DROP" in message
+    assert "(ราคาลงสะสมในรอบ 24 ชั่วโมง)" in message
+    assert "Event: ROLLING_DROP_5" in message
+    assert "(ลงมากกว่า 5%)" in message
+    assert "รอดูต่อ ยังไม่ควรเข้า" in message
+
+
+def test_error_message_has_bilingual_sections():
+    message = format_signal_message(
+        signal("C"),
+        None,
+        32.5,
+        None,
+        error="fetch failed",
+        tried_sources=["Binance", "Kraken"],
+        final_error="all sources failed",
+    )
+
+    assert "❌ ERROR" in message
+    assert "Reason:" in message
+    assert "สาเหตุ: all sources failed" in message
+    assert "Action:" in message
+    assert "คำแนะนำ: ห้ามเข้า / งดช้อน" in message
+    assert "Risk:" in message
+    assert "ความเสี่ยง: data_error" in message
+
+
+def test_daily_summary_has_bilingual_labels():
+    message = build_daily_summary(
+        {"position": {"total_zec": 0}},
+        {
+            "price_thb": 17000,
+            "btc_guard": {"status": "WARNING"},
+            "signal_label": "WAIT",
+            "entry_score": 56,
+            "bounce_probability": 48,
+            "opportunity_score": 57,
+            "qa_status": {"state_valid": True},
+        },
+    )
+
+    assert "📊 DAILY SUMMARY" in message
+    assert "(สรุปประจำวัน)" in message
+    assert "Current Price / ราคาปัจจุบัน" in message
+    assert "BTC Guard / สถานะตลาดใหญ่" in message
+    assert "Position / สถานะการถือเหรียญ" in message

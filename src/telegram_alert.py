@@ -6,6 +6,14 @@ from typing import Any
 
 import requests
 
+from reason_formatter import (
+    confidence_text,
+    format_action_lines,
+    format_btc_guard,
+    format_reason_lines,
+    rolling_drop_translation,
+)
+
 
 IMPORTANT_GRADES = {"A", "C"}
 BRAND_HEADER = "\U0001f6e1\ufe0f SEK Trade Guardian\nMode: ZEC Guardian Mode"
@@ -55,6 +63,15 @@ def _append_entry_targets(lines: list[str], plan: dict[str, Any]) -> None:
         lines.append(f"Buy Zone: {plan['buy_zone_usdt']:,.4f} USDT")
     lines.append(f"TP50: {plan['tp50_usdt']} USDT")
     lines.append(f"TP100: {plan['tp100_usdt']} USDT")
+
+
+def _score_lines(label: str, value: Any, thai: str, suffix: str = "") -> list[str]:
+    display = "-" if value is None else f"{value}{suffix}"
+    return [f"{label}: {display}", f"({thai})"]
+
+
+def _why_not_entry_lines(blockers: list[Any] | None) -> list[str]:
+    return ["Why Not Entry:", *format_reason_lines(blockers)]
 
 
 def _append_position_targets(lines: list[str], plan: dict[str, Any]) -> None:
@@ -108,72 +125,86 @@ def format_v2_message(
 
     if event:
         event_type = event.get("event_type")
-        title = "\u26a0\ufe0f ZEC ROLLING 24H DROP" if str(event_type).startswith("ROLLING_DROP") else "\u26a0\ufe0f PRICE DROP ALERT"
+        is_rolling_drop = str(event_type).startswith("ROLLING_DROP")
+        title = (
+            "\u26a0\ufe0f ZEC ROLLING 24H DROP\n(ราคาลงสะสมในรอบ 24 ชั่วโมง)"
+            if is_rolling_drop
+            else "\u26a0\ufe0f PRICE DROP ALERT"
+        )
         lines = [f"Event: {event_type}", f"Price: {price_thb:,.2f} THB / {price_usdt:,.4f} USDT"]
+        if is_rolling_drop:
+            lines.insert(1, f"({rolling_drop_translation(event_type)})")
         if event.get("high_24h") is not None:
             lines.append(f"24h High: {event['high_24h']:,.2f} THB")
             lines.append(f"Drop From 24h High: {event['drop_from_24h_high_percent']}%")
-        lines.extend(
-            [
-                f"Entry Score: {entry_result.get('entry_score', '-')}",
-                f"Bounce Probability: {bounce_result.get('bounce_probability', '-')}",
-                f"Opportunity Score: {opportunity_result.get('opportunity_score', '-')}",
-                f"BTC Guard: {btc_guard.get('status', '-')}",
-                f"Action: {action}",
-                f"Why Not Entry: {'; '.join(entry_result.get('blockers', [])) or '-'}",
-            ]
-        )
+        lines.extend(_score_lines("Entry Score", entry_result.get("entry_score", "-"), "คะแนนความน่าสนใจในการเข้า"))
+        lines.extend(_score_lines("Bounce Probability", bounce_result.get("bounce_probability", "-"), "โอกาสเด้งกลับ", "%"))
+        lines.extend(_score_lines("Opportunity Score", opportunity_result.get("opportunity_score", "-"), "ความคุ้มค่าในการเข้า", "%"))
+        lines.append(f"BTC Guard: {format_btc_guard(btc_guard.get('status', '-'))}")
+        lines.extend(format_action_lines(action))
+        lines.extend(_why_not_entry_lines(entry_result.get("blockers", [])))
         return branded_message(title, lines)
 
     if total_zec <= 0 and signal_label in {"WAIT", "DANGER", "NEAR_ENTRY"}:
         title = "\U0001f7e0 NEAR ENTRY" if signal_label == "NEAR_ENTRY" else "\U0001f7e1 WAIT MODE"
-        return branded_message(
-            title,
+        lines = [
+            f"Price: {price_thb:,.2f} THB / {price_usdt:,.4f} USDT",
+            f"Data Source: {data_source or '-'}",
+            f"FX Rate: {fx_rate or '-'}",
+            f"FX Source: {fx_source or '-'}",
+            f"Signal: {signal_label}",
+        ]
+        lines.extend(_score_lines("Entry Score", entry_result.get("entry_score", "-"), "คะแนนความน่าสนใจในการเข้า"))
+        lines.extend(_score_lines("Bounce Probability", bounce_result.get("bounce_probability", "-"), "โอกาสเด้งกลับ", "%"))
+        lines.extend(_score_lines("Opportunity Score", opportunity_result.get("opportunity_score", "-"), "ความคุ้มค่าในการเข้า", "%"))
+        lines.extend(
             [
-                f"Price: {price_thb:,.2f} THB / {price_usdt:,.4f} USDT",
-                f"Data Source: {data_source or '-'}",
-                f"FX Rate: {fx_rate or '-'}",
-                f"FX Source: {fx_source or '-'}",
-                f"Signal: {signal_label}",
-                f"Entry Score: {entry_result.get('entry_score', '-')}",
-                f"Bounce Probability: {bounce_result.get('bounce_probability', '-')}",
-                f"Opportunity Score: {opportunity_result.get('opportunity_score', '-')}",
-                f"BTC Guard: {btc_guard.get('status', '-')}",
+                f"BTC Guard: {format_btc_guard(btc_guard.get('status', '-'))}",
                 f"BTC 24h: {btc_guard.get('change_24h', '-')}",
                 f"BTC 7d: {btc_guard.get('change_7d', '-')}",
-                f"Action: {action}",
-                f"Why Not Entry: {'; '.join(entry_result.get('blockers', [])) or '-'}",
-                f"Missing Conditions: {'; '.join(entry_result.get('blockers', [])) or '-'}",
-                f"Reason: {' + '.join(entry_result.get('reasons', signal.reasons))}",
-                f"Risk: {' + '.join(signal.risk_flags) if signal.risk_flags else '-'}",
-            ],
+            ]
         )
+        lines.extend(format_action_lines(action))
+        lines.extend(_why_not_entry_lines(entry_result.get("blockers", [])))
+        lines.append(f"Risk: {' + '.join(signal.risk_flags) if signal.risk_flags else '-'}")
+        return branded_message(title, lines)
 
     if total_zec <= 0 and signal_label in {"ENTRY", "STRONG_ENTRY", "SS_PLUS"}:
         entry = price_thb
-        title = "\U0001f6a8 SS+ RARE SETUP" if signal_label == "SS_PLUS" else "\U0001f525 ENTRY SIGNAL"
-        return branded_message(
-            title,
+        title = (
+            "\U0001f6a8 SS+ RARE SETUP\n(สัญญาณพิเศษระดับสูง)"
+            if signal_label == "SS_PLUS"
+            else "\U0001f525 ENTRY SIGNAL"
+        )
+        action = "STRONG BUY" if signal_label == "SS_PLUS" else "BUY LEG1"
+        lines = [
+            f"Signal: {signal_label}",
+            *format_action_lines(action),
+            f"Entry Price: {entry:,.2f} THB / {price_usdt:,.4f} USDT",
+            f"Data Source: {data_source or '-'}",
+            f"FX Rate: {fx_rate or '-'}",
+            f"FX Source: {fx_source or '-'}",
+            f"TP50: {entry * 1.05:,.2f} THB",
+            "กำไรประมาณ +5%",
+            f"TP100: {entry * 1.10:,.2f} THB",
+            "กำไรประมาณ +10%",
+            f"TP3: {entry * 1.15:,.2f} THB",
+            "กำไรประมาณ +15%",
+        ]
+        lines.extend(_score_lines("Entry Score", entry_result.get("entry_score", "-"), "คะแนนความน่าสนใจในการเข้า"))
+        lines.extend(_score_lines("Bounce Probability", bounce_result.get("bounce_probability", "-"), "โอกาสเด้งกลับ", "%"))
+        lines.extend(_score_lines("Opportunity Score", opportunity_result.get("opportunity_score", "-"), "ความคุ้มค่าในการเข้า", "%"))
+        lines.extend(
             [
-                f"Signal: {signal_label}",
-                "Action: BUY LEG1",
-                f"Entry Price: {entry:,.2f} THB / {price_usdt:,.4f} USDT",
-                f"Data Source: {data_source or '-'}",
-                f"FX Rate: {fx_rate or '-'}",
-                f"FX Source: {fx_source or '-'}",
-                f"TP50: {entry * 1.05:,.2f} THB",
-                f"TP100: {entry * 1.10:,.2f} THB",
-                f"TP3: {entry * 1.15:,.2f} THB",
-                f"Entry Score: {entry_result.get('entry_score', '-')}",
-                f"Bounce Probability: {bounce_result.get('bounce_probability', '-')}",
-                f"Opportunity Score: {opportunity_result.get('opportunity_score', '-')}",
-                f"BTC Guard: {btc_guard.get('status', '-')}",
+                f"BTC Guard: {format_btc_guard(btc_guard.get('status', '-'))}",
                 f"Confidence: {signal.confidence}%",
+                confidence_text(signal.confidence),
                 f"Reason: {' + '.join(entry_result.get('reasons', signal.reasons))}",
                 f"Risk: {' + '.join(signal.risk_flags) if signal.risk_flags else '-'}",
                 "Note: Very strong historical-style setup, not a guaranteed bounce." if signal_label == "SS_PLUS" else "Manual confirmation required. No auto trading.",
-            ],
+            ]
         )
+        return branded_message(title, lines)
 
     if leg_plan and leg_plan.get("can_buy") and signal.grade == "A":
         return branded_message(
@@ -232,15 +263,18 @@ def format_signal_message(
 ) -> str:
     if error:
         return branded_message(
-            "\u26a0\ufe0f ERROR",
+            "\u274c ERROR",
             [
-                "Status: data fetch failed",
+                "Reason:",
+                f"สาเหตุ: {final_error or error}",
                 f"tried_sources: {', '.join(tried_sources or []) or '-'}",
                 f"final_error: {final_error or error}",
                 f"FX Rate: {fx_rate or '-'}",
                 f"FX Source: {fx_source or '-'}",
-                f"Action: {NO_ENTRY_ACTION}",
-                "Risk: data_error",
+                "Action:",
+                f"คำแนะนำ: {NO_ENTRY_ACTION}",
+                "Risk:",
+                "ความเสี่ยง: data_error",
             ],
         )
 

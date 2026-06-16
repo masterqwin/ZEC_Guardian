@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+from copy import deepcopy
 from pathlib import Path
 from typing import Any
 
@@ -36,7 +37,7 @@ def ensure_data_files(data_dir: str) -> None:
 def read_json(path: str | Path, default: dict[str, Any]) -> dict[str, Any]:
     target = Path(path)
     if not target.exists():
-        return default.copy()
+        return deepcopy(default)
     with target.open("r", encoding="utf-8") as handle:
         return json.load(handle)
 
