@@ -1,4 +1,55 @@
 {
   "schema_version": 1,
-  "learning": []
+  "learning": [
+    {
+      "timestamp": "2026-06-16T17:39:05.679759+00:00",
+      "price_thb": 16339.17,
+      "price_usdt": 502.77,
+      "signal": "C",
+      "signal_type": "WAIT",
+      "confidence": 45,
+      "entry_score": 56,
+      "bounce_probability": 48,
+      "recovery_probability": 65,
+      "opportunity_score": 57,
+      "btc_guard": {
+        "status": "WARNING",
+        "change_24h": -1.79878,
+        "change_7d": 5.655940573686562,
+        "reason": "BTC below EMA50 with negative momentum"
+      },
+      "reason": [
+        "RSI เริ่มฟื้น",
+        "ราคาอยู่ใกล้ EMA สำคัญ",
+        "BTC Guard ยังไม่พัง",
+        "ราคาอยู่ในโซนย่อที่ยังควบคุมได้"
+      ],
+      "blockers": [
+        "support proximity not confirmed",
+        "volume confirmation missing",
+        "BTC Guard WARNING"
+      ],
+      "risk": [
+        "volume ขายแรง"
+      ],
+      "data_source": "CoinGecko",
+      "position_state": {
+        "total_zec": 0,
+        "total_cost_thb": 0,
+        "average_cost_thb": 0,
+        "lots": []
+      },
+      "recommended_action": "WAIT / NO TRADE",
+      "action": "WAIT / NO TRADE",
+      "event_type": "ROLLING_DROP_5",
+      "outcome_1h": null,
+      "outcome_4h": null,
+      "outcome_24h": null,
+      "outcome_3d": null,
+      "outcome_7d": null,
+      "max_gain_percent": null,
+      "max_drawdown_percent": null,
+      "result_status": "PENDING"
+    }
+  ]
 }

@@ -20,7 +20,26 @@
     "zec_per_leg": 1
   },
   "last_action": null,
-  "updated_at": null,
-  "alerts": {},
-  "daily_summary": {}
+  "updated_at": "2026-06-16T17:39:05.679756+00:00",
+  "alerts": {
+    "last_rolling_drop_event": "ROLLING_DROP_5",
+    "last_rolling_drop_sent_at": "2026-06-16T17:39:05.679759+00:00",
+    "last_reference_price_thb": 16339.17,
+    "last_entry_score": 56
+  },
+  "daily_summary": {},
+  "qa": {
+    "date": "2026-06-16",
+    "total_scans_today": 1,
+    "total_errors_today": 0,
+    "last_scan_at": "2026-06-16T17:39:06.290277+00:00",
+    "last_success_at": "2026-06-16T17:39:06.290277+00:00",
+    "telegram_status": "unknown",
+    "data_source_used": "CoinGecko",
+    "last_signal": "WAIT",
+    "last_event": "ROLLING_DROP_5",
+    "state_valid": true,
+    "learning_log_valid": true
+  },
+  "last_daily_summary_preview": "🛡️ SEK Trade Guardian\nMode: ZEC Guardian Mode\n📊 Daily Summary\nSystem: RUNNING\nScans Today: 1\nErrors: 0\nLast Scan: 2026-06-16T17:39:06.290277+00:00\n\nPrice: 16,339.17 THB\nBTC Guard: WARNING\nSignal: WAIT\nEntry Score: 56\nBounce Probability: 48\nOpportunity Score: 57\n\nSignal Count: {}\nPosition: 0 ZEC\nNear Entry: NO\nLast Major Event: ROLLING_DROP_5\nQA Status: OK"
 }
