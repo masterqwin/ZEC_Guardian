@@ -20,14 +20,17 @@
     "zec_per_leg": 1
   },
   "last_action": null,
-  "updated_at": "2026-06-17T17:30:04.343257+00:00",
+  "updated_at": "2026-06-17T19:36:13.285209+00:00",
   "alerts": {
     "last_rolling_drop_event": "ROLLING_DROP_5",
-    "last_rolling_drop_sent_at": "2026-06-17T14:31:08.725249+00:00",
-    "last_reference_price_thb": 16137.38,
-    "last_entry_score": 57,
+    "last_rolling_drop_sent_at": "2026-06-17T19:36:13.285212+00:00",
+    "last_reference_price_thb": 15917.8,
+    "last_entry_score": 56,
     "signal:C:WAIT / NO TRADE": {
       "sent_at": "2026-06-17T11:23:46.420281+00:00"
+    },
+    "signal:A:WAIT / NO TRADE": {
+      "sent_at": "2026-06-17T19:36:14.125367+00:00"
     }
   },
   "daily_summary": {
@@ -35,16 +38,16 @@
   },
   "qa": {
     "date": "2026-06-17",
-    "total_scans_today": 5,
+    "total_scans_today": 6,
     "total_errors_today": 0,
-    "last_scan_at": "2026-06-17T17:30:04.996052+00:00",
-    "last_success_at": "2026-06-17T17:30:04.996052+00:00",
+    "last_scan_at": "2026-06-17T19:36:14.121908+00:00",
+    "last_success_at": "2026-06-17T19:36:14.121908+00:00",
     "telegram_status": "unknown",
     "data_source_used": "CoinGecko",
     "last_signal": "WAIT",
-    "last_event": "ROLLING_DROP_3",
+    "last_event": "ROLLING_DROP_5",
     "state_valid": true,
     "learning_log_valid": true
   },
-  "last_daily_summary_preview": "🛡️ SEK Trade Guardian\nMode: ZEC Guardian Mode\n📊 DAILY SUMMARY / Daily Summary\n(สรุปประจำวัน)\nSystem: RUNNING\nScans Today: 5\nErrors: 0\nLast Scan: 2026-06-17T17:30:04.996052+00:00\n\nCurrent Price / ราคาปัจจุบัน: 16,137.38 THB\nBTC Guard / สถานะตลาดใหญ่: SAFE\nCurrent Signal / สัญญาณปัจจุบัน: WAIT\nEntry Score / คะแนนการเข้า: 57\nBounce Probability / โอกาสเด้งกลับ: 57\nOpportunity Score / ความน่าสนใจ: 60\n\nSignal Count: {}\nPosition / สถานะการถือเหรียญ: 0 ZEC\nNear Entry: NO\nLast Major Event: ROLLING_DROP_3\nQA Status: OK"
+  "last_daily_summary_preview": "🛡️ SEK Trade Guardian\nMode: ZEC Guardian Mode\n📊 DAILY SUMMARY / Daily Summary\n(สรุปประจำวัน)\nSystem: RUNNING\nScans Today: 6\nErrors: 0\nLast Scan: 2026-06-17T19:36:14.121908+00:00\n\nCurrent Price / ราคาปัจจุบัน: 15,917.80 THB\nBTC Guard / สถานะตลาดใหญ่: WARNING\nCurrent Signal / สัญญาณปัจจุบัน: WAIT\nEntry Score / คะแนนการเข้า: 56\nBounce Probability / โอกาสเด้งกลับ: 48\nOpportunity Score / ความน่าสนใจ: 57\n\nSignal Count: {}\nPosition / สถานะการถือเหรียญ: 0 ZEC\nNear Entry: NO\nLast Major Event: ROLLING_DROP_5\nQA Status: OK"
 }
