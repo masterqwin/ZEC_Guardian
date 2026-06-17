@@ -34,6 +34,40 @@
         "state_valid": true,
         "learning_log_valid": true
       }
+    },
+    {
+      "date": "2026-06-17",
+      "system_status": "RUNNING",
+      "scans_today": 1,
+      "errors_today": 0,
+      "last_scan_at": "2026-06-17T01:39:27.890363+00:00",
+      "current_price_thb": 16412.98,
+      "btc_guard": {
+        "status": "WARNING",
+        "change_24h": -1.28315,
+        "change_7d": 5.028148217214054,
+        "reason": "BTC below EMA50 with negative momentum"
+      },
+      "current_signal": "WAIT",
+      "entry_score": 39,
+      "bounce_probability": 31,
+      "opportunity_score": 43,
+      "signal_counts": {},
+      "position_total_zec": 0,
+      "near_entry": false,
+      "qa_status": {
+        "date": "2026-06-17",
+        "total_scans_today": 1,
+        "total_errors_today": 0,
+        "last_scan_at": "2026-06-17T01:39:27.890363+00:00",
+        "last_success_at": "2026-06-17T01:39:27.890363+00:00",
+        "telegram_status": "unknown",
+        "data_source_used": "CoinGecko",
+        "last_signal": "WAIT",
+        "last_event": "ROLLING_DROP_3",
+        "state_valid": true,
+        "learning_log_valid": true
+      }
     }
   ]
 }
