@@ -6,6 +6,7 @@ from copy import deepcopy
 from datetime import datetime, timezone
 from typing import Any
 
+from capital_sync import format_capital_sync_result, sync_capital
 from config import load_config
 from dataclasses import replace
 from fx_rate import fetch_usd_thb_rate
@@ -110,6 +111,14 @@ def handle_manual_command(args: argparse.Namespace) -> int:
     print(_manual_summary(state, trade))
     if config.telegram_bot_token and config.telegram_chat_id:
         _send_manual_position_update(config, state, trade, dry_run=dry_run)
+    return 0
+
+
+def handle_capital_sync(capital_thb: float) -> int:
+    config = load_config()
+    ensure_data_files(config.data_dir)
+    payload, appended = sync_capital(config.data_dir, capital_thb, timestamp=_now_iso())
+    print(format_capital_sync_result(payload, appended))
     return 0
 
 
@@ -422,10 +431,14 @@ def main() -> int:
     parser.add_argument("--sell-percent", type=float, help="Record a manual sell by percent of current position.")
     parser.add_argument("--sell-zec", type=float, help="Record a manual sell by ZEC amount.")
     parser.add_argument("--sell-all", action="store_true", help="Record a manual sell of the whole position.")
+    parser.add_argument("--capital-sync", type=float, help="Record a manual total portfolio capital value in THB.")
     parser.add_argument("--zec", type=float, help="ZEC quantity for manual buy.")
     parser.add_argument("--price-thb", type=float, help="Manual trade price in THB.")
     parser.add_argument("--price-usdt", type=float, help="Manual trade price in USDT.")
     args = parser.parse_args()
+
+    if args.capital_sync is not None:
+        return handle_capital_sync(args.capital_sync)
 
     manual = args.buy or args.sell_percent is not None or args.sell_zec is not None or args.sell_all
     if manual:

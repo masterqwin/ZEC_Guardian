@@ -14,6 +14,7 @@ DEFAULT_LEARNING = {"schema_version": 1, "learning": []}
 DEFAULT_SIGNAL_HISTORY = {"schema_version": 1, "signals": []}
 DEFAULT_OUTCOME_HISTORY = {"schema_version": 1, "outcomes": []}
 DEFAULT_DAILY_SUMMARY = {"schema_version": 1, "summaries": []}
+DEFAULT_CAPITAL_HISTORY = {"schema_version": 1, "initial_capital_thb": 57000, "records": []}
 
 
 def ensure_data_files(data_dir: str) -> None:
@@ -27,6 +28,7 @@ def ensure_data_files(data_dir: str) -> None:
         "signal_history.json": DEFAULT_SIGNAL_HISTORY,
         "outcome_history.json": DEFAULT_OUTCOME_HISTORY,
         "daily_summary.json": DEFAULT_DAILY_SUMMARY,
+        "capital_history.json": DEFAULT_CAPITAL_HISTORY,
     }
     for filename, default in defaults.items():
         target = path / filename
