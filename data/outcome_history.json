@@ -295,7 +295,7 @@
       "outcome_3d": null,
       "outcome_7d": null,
       "max_gain_percent": 2.4249914060041107,
-      "max_drawdown_percent": -3.1608090034725755,
+      "max_drawdown_percent": -3.5115628008311,
       "hit_5_percent": false,
       "hit_8_percent": false,
       "hit_10_percent": false,
@@ -340,6 +340,26 @@
       "hit_8_percent": false,
       "hit_10_percent": false,
       "result_status": "LOSS"
+    },
+    {
+      "signal_id": "2026-06-18T16:02:06.151553+00:00",
+      "created_at": "2026-06-18T16:02:06.151553+00:00",
+      "signal_type": "DANGER",
+      "entry_price_thb": 14676.88,
+      "entry_score": 30,
+      "bounce_probability": 0,
+      "opportunity_score": 29,
+      "outcome_1h": null,
+      "outcome_4h": null,
+      "outcome_24h": null,
+      "outcome_3d": null,
+      "outcome_7d": null,
+      "max_gain_percent": -0.3622023209292428,
+      "max_drawdown_percent": -0.3622023209292428,
+      "hit_5_percent": false,
+      "hit_8_percent": false,
+      "hit_10_percent": false,
+      "result_status": "PENDING"
     }
   ]
 }
