@@ -1241,7 +1241,7 @@
       "outcome_3d": null,
       "outcome_7d": null,
       "max_gain_percent": 1.6393520340196328,
-      "max_drawdown_percent": 0.9172677827299858,
+      "max_drawdown_percent": 0.6520565720706091,
       "result_status": "PENDING",
       "hit_5_percent": false,
       "hit_8_percent": false,
@@ -1292,7 +1292,7 @@
       "outcome_3d": null,
       "outcome_7d": null,
       "max_gain_percent": 0.715521007608192,
-      "max_drawdown_percent": 0.48500003019924537,
+      "max_drawdown_percent": -0.2628006251916804,
       "result_status": "PENDING",
       "hit_5_percent": false,
       "hit_8_percent": false,
@@ -1342,7 +1342,7 @@
       "outcome_3d": null,
       "outcome_7d": null,
       "max_gain_percent": -0.22888326953254085,
-      "max_drawdown_percent": -0.22888326953254085,
+      "max_drawdown_percent": -0.9713712673203256,
       "result_status": "PENDING",
       "hit_5_percent": false,
       "hit_8_percent": false,
@@ -1368,6 +1368,57 @@
       "reason": [
         "ราคาอยู่ใกล้ EMA สำคัญ",
         "BTC Guard ยังไม่พัง"
+      ],
+      "blockers": [
+        "RSI not in entry zone",
+        "support proximity not confirmed",
+        "volume confirmation missing",
+        "BTC Guard DANGER"
+      ],
+      "risk": [],
+      "data_source": "CoinGecko",
+      "position_state": {
+        "total_zec": 0,
+        "total_cost_thb": 0,
+        "average_cost_thb": 0,
+        "lots": []
+      },
+      "recommended_action": "WAIT / NO TRADE",
+      "action": "WAIT / NO TRADE",
+      "event_type": null,
+      "outcome_1h": null,
+      "outcome_4h": null,
+      "outcome_24h": null,
+      "outcome_3d": null,
+      "outcome_7d": null,
+      "max_gain_percent": -0.7441913272291244,
+      "max_drawdown_percent": -0.7441913272291244,
+      "result_status": "PENDING",
+      "hit_5_percent": false,
+      "hit_8_percent": false,
+      "hit_10_percent": false
+    },
+    {
+      "timestamp": "2026-06-19T20:01:48.800893+00:00",
+      "price_thb": 14861.87,
+      "price_usdt": 451.72,
+      "signal": "B",
+      "signal_type": "DANGER",
+      "confidence": 82,
+      "entry_score": 0,
+      "bounce_probability": 0,
+      "recovery_probability": 65,
+      "opportunity_score": 14,
+      "btc_guard": {
+        "status": "DANGER",
+        "change_24h": 0.13,
+        "change_7d": -0.4665417653644497,
+        "reason": "BTC below EMA200"
+      },
+      "reason": [
+        "ราคาอยู่ใกล้ EMA สำคัญ",
+        "BTC Guard ยังไม่พัง",
+        "ราคาอยู่ในโซนย่อที่ยังควบคุมได้"
       ],
       "blockers": [
         "RSI not in entry zone",
