@@ -50,7 +50,7 @@ def update_pending_outcomes(data_dir: str, current_price_thb: float, now: dateti
         upsert_outcome_history(
             data_dir,
             {
-                "signal_id": record.get("timestamp"),
+                "signal_id": record.get("signal_id") or record.get("timestamp"),
                 "created_at": record.get("timestamp"),
                 "signal_type": record.get("signal_type"),
                 "entry_price_thb": record.get("price_thb"),

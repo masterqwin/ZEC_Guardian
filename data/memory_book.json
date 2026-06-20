@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "statistics": {
+    "total_completed_signals": 0,
+    "win_count": 0,
+    "loss_count": 0,
+    "average_profit_percent": 0.0,
+    "average_holding_days": 0.0,
+    "best_signal_profit": 0.0,
+    "worst_signal_profit": 0.0
+  }
+}

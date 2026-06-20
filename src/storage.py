@@ -15,6 +15,19 @@ DEFAULT_SIGNAL_HISTORY = {"schema_version": 1, "signals": []}
 DEFAULT_OUTCOME_HISTORY = {"schema_version": 1, "outcomes": []}
 DEFAULT_DAILY_SUMMARY = {"schema_version": 1, "summaries": []}
 DEFAULT_CAPITAL_HISTORY = {"schema_version": 1, "initial_capital_thb": 57000, "records": []}
+DEFAULT_TRADE_JOURNAL = {"schema_version": 1, "trades": []}
+DEFAULT_MEMORY_BOOK = {
+    "schema_version": 1,
+    "statistics": {
+        "total_completed_signals": 0,
+        "win_count": 0,
+        "loss_count": 0,
+        "average_profit_percent": 0.0,
+        "average_holding_days": 0.0,
+        "best_signal_profit": 0.0,
+        "worst_signal_profit": 0.0,
+    },
+}
 
 
 def ensure_data_files(data_dir: str) -> None:
@@ -29,6 +42,8 @@ def ensure_data_files(data_dir: str) -> None:
         "outcome_history.json": DEFAULT_OUTCOME_HISTORY,
         "daily_summary.json": DEFAULT_DAILY_SUMMARY,
         "capital_history.json": DEFAULT_CAPITAL_HISTORY,
+        "trade_journal.json": DEFAULT_TRADE_JOURNAL,
+        "memory_book.json": DEFAULT_MEMORY_BOOK,
     }
     for filename, default in defaults.items():
         target = path / filename

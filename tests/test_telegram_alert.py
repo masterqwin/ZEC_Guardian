@@ -168,8 +168,10 @@ def test_v2_entry_signal_has_bilingual_targets_and_confidence():
         bounce_result={"bounce_probability": 82},
         opportunity_result={"opportunity_score": 88},
         btc_guard={"status": "SAFE"},
+        signal_id="ZEC-20260620-001",
     )
 
+    assert "Signal ID: ZEC-20260620-001" in message
     assert "Action: BUY LEG1" in message
     assert "เปิดไม้แรก" in message
     assert "กำไรประมาณ +5%" in message

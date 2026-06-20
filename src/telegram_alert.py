@@ -113,6 +113,7 @@ def format_v2_message(
     opportunity_result: dict[str, Any] | None = None,
     btc_guard: dict[str, Any] | None = None,
     event: dict[str, Any] | None = None,
+    signal_id: str | None = None,
 ) -> str:
     price_thb = float(price_thb or 0)
     price_usdt = float(price_usdt or 0)
@@ -132,6 +133,8 @@ def format_v2_message(
             else "\u26a0\ufe0f PRICE DROP ALERT"
         )
         lines = [f"Event: {event_type}", f"Price: {price_thb:,.2f} THB / {price_usdt:,.4f} USDT"]
+        if signal_id:
+            lines.insert(0, f"Signal ID: {signal_id}")
         if is_rolling_drop:
             lines.insert(1, f"({rolling_drop_translation(event_type)})")
         if event.get("high_24h") is not None:
@@ -179,6 +182,7 @@ def format_v2_message(
         action = "STRONG BUY" if signal_label == "SS_PLUS" else "BUY LEG1"
         lines = [
             f"Signal: {signal_label}",
+            f"Signal ID: {signal_id}" if signal_id else "Signal ID: -",
             *format_action_lines(action),
             f"Entry Price: {entry:,.2f} THB / {price_usdt:,.4f} USDT",
             f"Data Source: {data_source or '-'}",

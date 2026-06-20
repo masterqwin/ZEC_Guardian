@@ -26,7 +26,9 @@ from position_manager import buy_lot, recalculate_position, sell_all, sell_perce
 from profit_engine import action_from_profit, calculate_profit_state
 from qa_engine import build_qa_status
 from recovery_engine import estimate_recovery
+from real_trade_outcome import complete_signal_outcome
 from signal_engine import evaluate_signal
+from signal_id import generate_signal_id
 from signal_outcome_tracker import create_outcome_record, update_pending_outcomes
 from storage import append_signal, ensure_data_files, load_state, save_state
 from storage import append_daily_summary_history, append_outcome_history, append_signal_history
@@ -39,7 +41,7 @@ from telegram_alert import (
     should_send_alert,
     should_send_daily_summary,
 )
-from trade_journal import append_trade, buy_trade_record
+from trade_journal import append_trade, buy_trade_record, load_trade_journal, normalize_sell_trade
 
 
 def _event_key(grade: str, action: str, error: str | None = None) -> str:
@@ -56,7 +58,8 @@ def _manual_summary(state: dict[str, Any], trade: dict[str, Any]) -> str:
     position = state["position"]
     lines = [
         "ZEC Guardian Manual Update",
-        f"Action: {trade['type']}",
+        f"Signal ID: {trade.get('signal_id') or '-'}",
+        f"Action: {trade.get('action', trade['type'])}",
         f"Cash THB: {state['cash_thb']:,.2f}",
         f"Realized Profit THB: {state['realized_profit_thb']:,.2f}",
         f"Total ZEC: {position['total_zec']}",
@@ -96,18 +99,25 @@ def handle_manual_command(args: argparse.Namespace) -> int:
 
     if args.buy:
         state, lot = buy_lot(state, args.zec, args.price_thb, args.price_usdt, timestamp=timestamp)
-        trade = buy_trade_record(lot, deepcopy(state["position"]), timestamp)
+        if args.signal_id:
+            lot["signal_id"] = args.signal_id
+        trade = buy_trade_record(lot, deepcopy(state["position"]), timestamp, signal_id=args.signal_id)
     elif args.sell_percent is not None:
         state, trade = sell_percent(state, args.sell_percent, args.price_thb, args.price_usdt, timestamp=timestamp)
+        trade = normalize_sell_trade(trade, "SELL_PERCENT", args.signal_id)
     elif args.sell_zec is not None:
         state, trade = sell_zec(state, args.sell_zec, args.price_thb, args.price_usdt, timestamp=timestamp)
+        trade = normalize_sell_trade(trade, "SELL_ZEC", args.signal_id)
     elif args.sell_all:
         state, trade = sell_all(state, args.price_thb, args.price_usdt, timestamp=timestamp)
+        trade = normalize_sell_trade(trade, "SELL_ALL", args.signal_id)
     else:
         raise ValueError("No manual command was provided")
 
     save_state(config.data_dir, state)
     append_trade(config.data_dir, trade)
+    if args.sell_all and args.signal_id:
+        complete_signal_outcome(config.data_dir, args.signal_id, load_trade_journal(config.data_dir))
     print(_manual_summary(state, trade))
     if config.telegram_bot_token and config.telegram_chat_id:
         _send_manual_position_update(config, state, trade, dry_run=dry_run)
@@ -152,6 +162,7 @@ def run(dry_run_override: bool | None = None) -> int:
     opportunity_result: dict[str, Any] | None = None
     btc_guard_result: dict[str, Any] | None = None
     event: dict[str, Any] | None = None
+    signal_id: str | None = None
     qa_status: dict[str, Any] | None = None
     recommended_action = "WAIT / NO TRADE"
     fx = fetch_usd_thb_rate(config)
@@ -176,6 +187,8 @@ def run(dry_run_override: bool | None = None) -> int:
         opportunity_result = evaluate_opportunity(entry_result["entry_score"], bounce_result["bounce_probability"])
         signal = evaluate_signal(zec.price_usdt, zec.volume, zec_indicators, btc_indicators)
         signal_grade_for_legacy = "A" if entry_result["label"] in {"ENTRY", "STRONG_ENTRY", "SS_PLUS"} else "B" if entry_result["label"] == "NEAR_ENTRY" else "C" if entry_result["label"] == "DANGER" else "B"
+        if entry_result["label"] in {"ENTRY", "STRONG_ENTRY", "SS_PLUS"}:
+            signal_id = generate_signal_id(config.data_dir, datetime.fromisoformat(now), symbol="ZEC")
         plan = build_trade_plan(state, signal_grade_for_legacy, zec.price_usdt, replace(config, usd_thb_rate=(fx.rate if fx_used else zec_price_thb / zec.price_usdt)))
 
         if float(state["position"]["total_zec"]) > 0:
@@ -203,6 +216,7 @@ def run(dry_run_override: bool | None = None) -> int:
             config.data_dir,
             {
                 "timestamp": now,
+                "signal_id": signal_id,
                 "symbol": config.zec_symbol,
                 "price_usdt": zec.price_usdt,
                 "price_thb": zec_price_thb,
@@ -241,6 +255,7 @@ def run(dry_run_override: bool | None = None) -> int:
                 config.data_dir,
                 {
                     "timestamp": now,
+                    "signal_id": signal_id,
                     "symbol": config.zec_symbol,
                     "mode": "ZEC Guardian Mode",
                     "price_thb": zec_price_thb,
@@ -275,12 +290,14 @@ def run(dry_run_override: bool | None = None) -> int:
             signal_type=entry_result["label"],
         )
         learning_record = create_outcome_record(learning_record)
+        if signal_id:
+            learning_record["signal_id"] = signal_id
         append_learning_record(config.data_dir, learning_record)
         if learning_record.get("result_status") == "PENDING" and learning_record.get("signal_type") in {"NEAR_ENTRY", "ENTRY", "STRONG_ENTRY", "SS_PLUS"}:
             append_outcome_history(
                 config.data_dir,
                 {
-                    "signal_id": learning_record.get("timestamp"),
+                    "signal_id": learning_record.get("signal_id") or learning_record.get("timestamp"),
                     "created_at": learning_record.get("timestamp"),
                     "signal_type": learning_record.get("signal_type"),
                     "entry_price_thb": learning_record.get("price_thb"),
@@ -352,6 +369,7 @@ def run(dry_run_override: bool | None = None) -> int:
             opportunity_result=opportunity_result,
             btc_guard=btc_guard_result,
             event=event,
+            signal_id=signal_id,
         )
 
     daily_summary_message = build_daily_summary(
@@ -432,6 +450,7 @@ def main() -> int:
     parser.add_argument("--sell-zec", type=float, help="Record a manual sell by ZEC amount.")
     parser.add_argument("--sell-all", action="store_true", help="Record a manual sell of the whole position.")
     parser.add_argument("--capital-sync", type=float, help="Record a manual total portfolio capital value in THB.")
+    parser.add_argument("--signal-id", help="Associate a manual trade with an ENTRY signal ID.")
     parser.add_argument("--zec", type=float, help="ZEC quantity for manual buy.")
     parser.add_argument("--price-thb", type=float, help="Manual trade price in THB.")
     parser.add_argument("--price-usdt", type=float, help="Manual trade price in USDT.")
