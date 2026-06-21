@@ -20,11 +20,11 @@
     "zec_per_leg": 1
   },
   "last_action": null,
-  "updated_at": "2026-06-20T23:52:09.471821+00:00",
+  "updated_at": "2026-06-21T02:08:01.548504+00:00",
   "alerts": {
     "last_rolling_drop_event": "ROLLING_DROP_5",
     "last_rolling_drop_sent_at": "2026-06-19T10:02:15.274048+00:00",
-    "last_reference_price_thb": 15557.71,
+    "last_reference_price_thb": 15500.31,
     "last_entry_score": 47,
     "signal:C:WAIT / NO TRADE": {
       "sent_at": "2026-06-19T10:02:15.942262+00:00"
@@ -34,14 +34,14 @@
     }
   },
   "daily_summary": {
-    "last_sent_date": "2026-06-20"
+    "last_sent_date": "2026-06-21"
   },
   "qa": {
-    "date": "2026-06-20",
-    "total_scans_today": 13,
+    "date": "2026-06-21",
+    "total_scans_today": 1,
     "total_errors_today": 0,
-    "last_scan_at": "2026-06-20T23:52:11.090576+00:00",
-    "last_success_at": "2026-06-20T23:52:11.090576+00:00",
+    "last_scan_at": "2026-06-21T02:08:02.223642+00:00",
+    "last_success_at": "2026-06-21T02:08:02.223642+00:00",
     "telegram_status": "unknown",
     "data_source_used": "CoinGecko",
     "last_signal": "WAIT",
@@ -49,5 +49,5 @@
     "state_valid": true,
     "learning_log_valid": true
   },
-  "last_daily_summary_preview": "🛡️ SEK Trade Guardian\nMode: ZEC Guardian Mode\n📊 DAILY SUMMARY / Daily Summary\n(สรุปประจำวัน)\nSystem: RUNNING\nScans Today: 13\nErrors: 0\nLast Scan: 2026-06-20T23:52:11.090576+00:00\n\nCurrent Price / ราคาปัจจุบัน: 15,557.71 THB\nBTC Guard / สถานะตลาดใหญ่: SAFE\nCurrent Signal / สัญญาณปัจจุบัน: WAIT\nEntry Score / คะแนนการเข้า: 47\nBounce Probability / โอกาสเด้งกลับ: 47\nOpportunity Score / ความน่าสนใจ: 52\n\nSignal Count: {}\nPosition / สถานะการถือเหรียญ: 0 ZEC\nNear Entry: NO\nLast Major Event: -\nQA Status: OK"
+  "last_daily_summary_preview": "🛡️ SEK Trade Guardian\nMode: ZEC Guardian Mode\n📊 DAILY SUMMARY / Daily Summary\n(สรุปประจำวัน)\nSystem: RUNNING\nScans Today: 1\nErrors: 0\nLast Scan: 2026-06-21T02:08:02.223642+00:00\n\nCurrent Price / ราคาปัจจุบัน: 15,500.31 THB\nBTC Guard / สถานะตลาดใหญ่: SAFE\nCurrent Signal / สัญญาณปัจจุบัน: WAIT\nEntry Score / คะแนนการเข้า: 47\nBounce Probability / โอกาสเด้งกลับ: 47\nOpportunity Score / ความน่าสนใจ: 52\n\nSignal Count: {}\nPosition / สถานะการถือเหรียญ: 0 ZEC\nNear Entry: NO\nLast Major Event: -\nQA Status: OK"
 }

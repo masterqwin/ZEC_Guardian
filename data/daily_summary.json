@@ -170,6 +170,40 @@
         "state_valid": true,
         "learning_log_valid": true
       }
+    },
+    {
+      "date": "2026-06-21",
+      "system_status": "RUNNING",
+      "scans_today": 1,
+      "errors_today": 0,
+      "last_scan_at": "2026-06-21T02:08:02.223642+00:00",
+      "current_price_thb": 15500.31,
+      "btc_guard": {
+        "status": "SAFE",
+        "change_24h": 1.13908,
+        "change_7d": -0.24466312507766733,
+        "reason": "BTC market guard is stable"
+      },
+      "current_signal": "WAIT",
+      "entry_score": 47,
+      "bounce_probability": 47,
+      "opportunity_score": 52,
+      "signal_counts": {},
+      "position_total_zec": 0,
+      "near_entry": false,
+      "qa_status": {
+        "date": "2026-06-21",
+        "total_scans_today": 1,
+        "total_errors_today": 0,
+        "last_scan_at": "2026-06-21T02:08:02.223642+00:00",
+        "last_success_at": "2026-06-21T02:08:02.223642+00:00",
+        "telegram_status": "unknown",
+        "data_source_used": "CoinGecko",
+        "last_signal": "WAIT",
+        "last_event": null,
+        "state_valid": true,
+        "learning_log_valid": true
+      }
     }
   ]
 }
