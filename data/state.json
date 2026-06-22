@@ -20,17 +20,17 @@
     "zec_per_leg": 1
   },
   "last_action": null,
-  "updated_at": "2026-06-22T20:18:31.648953+00:00",
+  "updated_at": "2026-06-22T22:17:38.736897+00:00",
   "alerts": {
     "last_rolling_drop_event": "ROLLING_DROP_3",
-    "last_rolling_drop_sent_at": "2026-06-22T07:04:37.304270+00:00",
-    "last_reference_price_thb": 14806.06,
-    "last_entry_score": 47,
+    "last_rolling_drop_sent_at": "2026-06-22T22:17:38.736900+00:00",
+    "last_reference_price_thb": 14651.38,
+    "last_entry_score": 14,
     "signal:C:WAIT / NO TRADE": {
       "sent_at": "2026-06-21T20:46:44.688611+00:00"
     },
     "signal:A:WAIT / NO TRADE": {
-      "sent_at": "2026-06-21T19:13:17.714124+00:00"
+      "sent_at": "2026-06-22T22:17:39.254224+00:00"
     },
     "signal:A:WATCH CLOSELY": {
       "sent_at": "2026-06-21T10:37:49.974974+00:00"
@@ -44,16 +44,16 @@
   },
   "qa": {
     "date": "2026-06-22",
-    "total_scans_today": 5,
+    "total_scans_today": 6,
     "total_errors_today": 0,
-    "last_scan_at": "2026-06-22T20:18:32.234615+00:00",
-    "last_success_at": "2026-06-22T20:18:32.234615+00:00",
+    "last_scan_at": "2026-06-22T22:17:39.238004+00:00",
+    "last_success_at": "2026-06-22T22:17:39.238004+00:00",
     "telegram_status": "unknown",
     "data_source_used": "CoinGecko",
-    "last_signal": "WAIT",
-    "last_event": null,
+    "last_signal": "DANGER",
+    "last_event": "ROLLING_DROP_3",
     "state_valid": true,
     "learning_log_valid": true
   },
-  "last_daily_summary_preview": "🛡️ SEK Trade Guardian\nMode: ZEC Guardian Mode\n📊 DAILY SUMMARY / Daily Summary\n(สรุปประจำวัน)\nSystem: RUNNING\nScans Today: 5\nErrors: 0\nLast Scan: 2026-06-22T20:18:32.234615+00:00\n\nCurrent Price / ราคาปัจจุบัน: 14,806.06 THB\nBTC Guard / สถานะตลาดใหญ่: SAFE\nCurrent Signal / สัญญาณปัจจุบัน: WAIT\nEntry Score / คะแนนการเข้า: 47\nBounce Probability / โอกาสเด้งกลับ: 47\nOpportunity Score / ความน่าสนใจ: 52\n\nSignal Count: {}\nPosition / สถานะการถือเหรียญ: 0 ZEC\nNear Entry: NO\nLast Major Event: -\nQA Status: OK"
+  "last_daily_summary_preview": "🛡️ SEK Trade Guardian\nMode: ZEC Guardian Mode\n📊 DAILY SUMMARY / Daily Summary\n(สรุปประจำวัน)\nSystem: RUNNING\nScans Today: 6\nErrors: 0\nLast Scan: 2026-06-22T22:17:39.238004+00:00\n\nCurrent Price / ราคาปัจจุบัน: 14,651.38 THB\nBTC Guard / สถานะตลาดใหญ่: DANGER\nCurrent Signal / สัญญาณปัจจุบัน: DANGER\nEntry Score / คะแนนการเข้า: 14\nBounce Probability / โอกาสเด้งกลับ: 0\nOpportunity Score / ความน่าสนใจ: 21\n\nSignal Count: {}\nPosition / สถานะการถือเหรียญ: 0 ZEC\nNear Entry: NO\nLast Major Event: ROLLING_DROP_3\nQA Status: OK"
 }
