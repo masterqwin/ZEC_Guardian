@@ -1359,6 +1359,34 @@
         "volume confirmation missing"
       ],
       "data_source_used": "CoinGecko"
+    },
+    {
+      "timestamp": "2026-06-22T07:04:37.304270+00:00",
+      "signal_id": null,
+      "symbol": "ZECUSDT",
+      "mode": "ZEC Guardian Mode",
+      "price_thb": 14713.66,
+      "price_usdt": 447.38,
+      "signal_type": "DANGER",
+      "entry_score": 7,
+      "bounce_probability": 0,
+      "recovery_probability": 65,
+      "opportunity_score": 18,
+      "btc_guard": {
+        "status": "DANGER",
+        "change_24h": -0.53133,
+        "change_7d": -1.8511150175758482,
+        "reason": "BTC below EMA200"
+      },
+      "event_type": "ROLLING_DROP_3",
+      "recommended_action": "WAIT / NO TRADE",
+      "why_not_entry": [
+        "RSI not in entry zone",
+        "support proximity not confirmed",
+        "volume confirmation missing",
+        "BTC Guard DANGER"
+      ],
+      "data_source_used": "CoinGecko"
     }
   ]
 }
