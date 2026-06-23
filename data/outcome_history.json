@@ -1095,11 +1095,11 @@
       "outcome_3d": null,
       "outcome_7d": null,
       "max_gain_percent": 3.6634890456780402,
-      "max_drawdown_percent": -4.55401852800634,
+      "max_drawdown_percent": -5.549622807540964,
       "hit_5_percent": false,
       "hit_8_percent": false,
       "hit_10_percent": false,
-      "result_status": "PENDING"
+      "result_status": "LOSS"
     },
     {
       "signal_id": "2026-06-22T01:44:11.552210+00:00",
@@ -1235,11 +1235,11 @@
       "outcome_3d": null,
       "outcome_7d": null,
       "max_gain_percent": -0.1562885242308956,
-      "max_drawdown_percent": -4.6920116154836595,
+      "max_drawdown_percent": -5.68617647864559,
       "hit_5_percent": false,
       "hit_8_percent": false,
       "hit_10_percent": false,
-      "result_status": "PENDING"
+      "result_status": "LOSS"
     },
     {
       "signal_id": "2026-06-23T01:34:29.664450+00:00",
@@ -1255,11 +1255,11 @@
       "outcome_3d": null,
       "outcome_7d": null,
       "max_gain_percent": -0.2874119072215132,
-      "max_drawdown_percent": -4.542823002281452,
+      "max_drawdown_percent": -5.538544063194941,
       "hit_5_percent": false,
       "hit_8_percent": false,
       "hit_10_percent": false,
-      "result_status": "PENDING"
+      "result_status": "LOSS"
     },
     {
       "signal_id": "2026-06-23T05:48:30.837939+00:00",
@@ -1275,11 +1275,11 @@
       "outcome_3d": null,
       "outcome_7d": null,
       "max_gain_percent": -2.995910977072854,
-      "max_drawdown_percent": -4.267676906651397,
+      "max_drawdown_percent": -5.266268037379055,
       "hit_5_percent": false,
       "hit_8_percent": false,
       "hit_10_percent": false,
-      "result_status": "PENDING"
+      "result_status": "LOSS"
     },
     {
       "signal_id": "2026-06-23T08:49:02.621878+00:00",
@@ -1295,7 +1295,7 @@
       "outcome_3d": null,
       "outcome_7d": null,
       "max_gain_percent": 0.9191593517289277,
-      "max_drawdown_percent": -0.40393485798940565,
+      "max_drawdown_percent": -1.4428289753838675,
       "hit_5_percent": false,
       "hit_8_percent": false,
       "hit_10_percent": false,
@@ -1315,7 +1315,7 @@
       "outcome_3d": null,
       "outcome_7d": null,
       "max_gain_percent": -0.5558478914231436,
-      "max_drawdown_percent": -1.311043629591695,
+      "max_drawdown_percent": -2.3404756265167306,
       "hit_5_percent": false,
       "hit_8_percent": false,
       "hit_10_percent": false,
@@ -1335,7 +1335,27 @@
       "outcome_3d": null,
       "outcome_7d": null,
       "max_gain_percent": -0.7594169412234519,
-      "max_drawdown_percent": -0.7594169412234519,
+      "max_drawdown_percent": -1.7946029980174836,
+      "hit_5_percent": false,
+      "hit_8_percent": false,
+      "hit_10_percent": false,
+      "result_status": "PENDING"
+    },
+    {
+      "signal_id": "2026-06-23T16:39:41.812131+00:00",
+      "created_at": "2026-06-23T16:39:41.812131+00:00",
+      "signal_type": "DANGER",
+      "entry_price_thb": 13916.11,
+      "entry_score": 30,
+      "bounce_probability": 0,
+      "opportunity_score": 29,
+      "outcome_1h": null,
+      "outcome_4h": null,
+      "outcome_24h": null,
+      "outcome_3d": null,
+      "outcome_7d": null,
+      "max_gain_percent": -1.0431075925671747,
+      "max_drawdown_percent": -1.0431075925671747,
       "hit_5_percent": false,
       "hit_8_percent": false,
       "hit_10_percent": false,
