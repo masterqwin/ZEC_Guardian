@@ -3477,7 +3477,7 @@
       "outcome_24h": null,
       "outcome_3d": null,
       "outcome_7d": null,
-      "max_gain_percent": -1.0431075925671747,
+      "max_gain_percent": -0.056481301168218576,
       "max_drawdown_percent": -1.0431075925671747,
       "result_status": "PENDING",
       "hit_5_percent": false,
@@ -3503,6 +3503,58 @@
       },
       "reason": [
         "RSI ต่ำ มีโซนช้อน",
+        "ราคาอยู่ใกล้ EMA สำคัญ",
+        "BTC Guard ยังไม่พัง"
+      ],
+      "blockers": [
+        "support proximity not confirmed",
+        "volume confirmation missing",
+        "BTC Guard DANGER"
+      ],
+      "risk": [
+        "volume ขายแรง"
+      ],
+      "data_source": "CoinGecko",
+      "position_state": {
+        "total_zec": 0,
+        "total_cost_thb": 0,
+        "average_cost_thb": 0,
+        "lots": []
+      },
+      "recommended_action": "WAIT / NO TRADE",
+      "action": "WAIT / NO TRADE",
+      "event_type": "ROLLING_DROP_7",
+      "outcome_1h": null,
+      "outcome_4h": null,
+      "outcome_24h": null,
+      "outcome_3d": null,
+      "outcome_7d": null,
+      "max_gain_percent": 0.9970263489446934,
+      "max_drawdown_percent": 0.9970263489446934,
+      "result_status": "PENDING",
+      "hit_5_percent": false,
+      "hit_8_percent": false,
+      "hit_10_percent": false
+    },
+    {
+      "timestamp": "2026-06-23T20:31:20.732269+00:00",
+      "price_thb": 13908.25,
+      "price_usdt": 418.41,
+      "signal": "C",
+      "signal_type": "DANGER",
+      "confidence": 45,
+      "entry_score": 24,
+      "bounce_probability": 0,
+      "recovery_probability": 65,
+      "opportunity_score": 26,
+      "btc_guard": {
+        "status": "DANGER",
+        "change_24h": -2.22836,
+        "change_7d": -2.7216524830816886,
+        "reason": "BTC below EMA200"
+      },
+      "reason": [
+        "RSI เริ่มฟื้น",
         "ราคาอยู่ใกล้ EMA สำคัญ",
         "BTC Guard ยังไม่พัง"
       ],
