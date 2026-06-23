@@ -2815,7 +2815,7 @@
       "outcome_3d": null,
       "outcome_7d": null,
       "max_gain_percent": 3.6634890456780402,
-      "max_drawdown_percent": -4.1669152933898275,
+      "max_drawdown_percent": -4.55401852800634,
       "result_status": "PENDING",
       "hit_5_percent": false,
       "hit_8_percent": false,
@@ -3118,8 +3118,8 @@
       "outcome_3d": null,
       "outcome_7d": null,
       "max_gain_percent": -0.3424933350987994,
-      "max_drawdown_percent": -4.633215437726685,
-      "result_status": "PENDING",
+      "max_drawdown_percent": -5.018435123517366,
+      "result_status": "LOSS",
       "hit_5_percent": false,
       "hit_8_percent": false,
       "hit_10_percent": false
@@ -3168,7 +3168,7 @@
       "outcome_3d": null,
       "outcome_7d": null,
       "max_gain_percent": -0.1562885242308956,
-      "max_drawdown_percent": -4.305468043722444,
+      "max_drawdown_percent": -4.6920116154836595,
       "result_status": "PENDING",
       "hit_5_percent": false,
       "hit_8_percent": false,
@@ -3219,7 +3219,7 @@
       "outcome_3d": null,
       "outcome_7d": null,
       "max_gain_percent": -0.2874119072215132,
-      "max_drawdown_percent": -4.155674361623171,
+      "max_drawdown_percent": -4.542823002281452,
       "result_status": "PENDING",
       "hit_5_percent": false,
       "hit_8_percent": false,
@@ -3270,7 +3270,7 @@
       "outcome_3d": null,
       "outcome_7d": null,
       "max_gain_percent": -2.995910977072854,
-      "max_drawdown_percent": -3.8794123474183593,
+      "max_drawdown_percent": -4.267676906651397,
       "result_status": "PENDING",
       "hit_5_percent": false,
       "hit_8_percent": false,
@@ -3322,7 +3322,7 @@
       "outcome_3d": null,
       "outcome_7d": null,
       "max_gain_percent": 0.9191593517289277,
-      "max_drawdown_percent": 0.35820233243038024,
+      "max_drawdown_percent": -0.40393485798940565,
       "result_status": "PENDING",
       "hit_5_percent": false,
       "hit_8_percent": false,
@@ -3374,7 +3374,7 @@
       "outcome_3d": null,
       "outcome_7d": null,
       "max_gain_percent": -0.5558478914231436,
-      "max_drawdown_percent": -0.5558478914231436,
+      "max_drawdown_percent": -1.311043629591695,
       "result_status": "PENDING",
       "hit_5_percent": false,
       "hit_8_percent": false,
@@ -3409,6 +3409,58 @@
       "risk": [
         "volume ขายแรง",
         "BTC Guard เสีย"
+      ],
+      "data_source": "CoinGecko",
+      "position_state": {
+        "total_zec": 0,
+        "total_cost_thb": 0,
+        "average_cost_thb": 0,
+        "lots": []
+      },
+      "recommended_action": "WAIT / NO TRADE",
+      "action": "WAIT / NO TRADE",
+      "event_type": "ROLLING_DROP_7",
+      "outcome_1h": null,
+      "outcome_4h": null,
+      "outcome_24h": null,
+      "outcome_3d": null,
+      "outcome_7d": null,
+      "max_gain_percent": -0.7594169412234519,
+      "max_drawdown_percent": -0.7594169412234519,
+      "result_status": "PENDING",
+      "hit_5_percent": false,
+      "hit_8_percent": false,
+      "hit_10_percent": false
+    },
+    {
+      "timestamp": "2026-06-23T16:39:41.812131+00:00",
+      "price_thb": 13916.11,
+      "price_usdt": 418.39,
+      "signal": "C",
+      "signal_type": "DANGER",
+      "confidence": 45,
+      "entry_score": 30,
+      "bounce_probability": 0,
+      "recovery_probability": 65,
+      "opportunity_score": 29,
+      "btc_guard": {
+        "status": "DANGER",
+        "change_24h": -2.26867,
+        "change_7d": -2.8291430221332265,
+        "reason": "BTC below EMA200"
+      },
+      "reason": [
+        "RSI ต่ำ มีโซนช้อน",
+        "ราคาอยู่ใกล้ EMA สำคัญ",
+        "BTC Guard ยังไม่พัง"
+      ],
+      "blockers": [
+        "support proximity not confirmed",
+        "volume confirmation missing",
+        "BTC Guard DANGER"
+      ],
+      "risk": [
+        "volume ขายแรง"
       ],
       "data_source": "CoinGecko",
       "position_state": {
