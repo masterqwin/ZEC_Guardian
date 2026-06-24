@@ -20,11 +20,11 @@
     "zec_per_leg": 1
   },
   "last_action": null,
-  "updated_at": "2026-06-24T00:06:01.920194+00:00",
+  "updated_at": "2026-06-24T04:20:08.702847+00:00",
   "alerts": {
-    "last_rolling_drop_event": "ROLLING_DROP_5",
-    "last_rolling_drop_sent_at": "2026-06-24T00:06:01.920198+00:00",
-    "last_reference_price_thb": 13822.44,
+    "last_rolling_drop_event": "ROLLING_DROP_7",
+    "last_rolling_drop_sent_at": "2026-06-24T04:20:08.702850+00:00",
+    "last_reference_price_thb": 13728.08,
     "last_entry_score": 30,
     "signal:C:WAIT / NO TRADE": {
       "sent_at": "2026-06-23T18:27:55.757496+00:00"
@@ -44,16 +44,16 @@
   },
   "qa": {
     "date": "2026-06-24",
-    "total_scans_today": 1,
+    "total_scans_today": 2,
     "total_errors_today": 0,
-    "last_scan_at": "2026-06-24T00:06:02.852625+00:00",
-    "last_success_at": "2026-06-24T00:06:02.852625+00:00",
+    "last_scan_at": "2026-06-24T04:20:09.354595+00:00",
+    "last_success_at": "2026-06-24T04:20:09.354595+00:00",
     "telegram_status": "unknown",
     "data_source_used": "CoinGecko",
     "last_signal": "DANGER",
-    "last_event": "ROLLING_DROP_5",
+    "last_event": "ROLLING_DROP_7",
     "state_valid": true,
     "learning_log_valid": true
   },
-  "last_daily_summary_preview": "🛡️ SEK Trade Guardian\nMode: ZEC Guardian Mode\n📊 DAILY SUMMARY / Daily Summary\n(สรุปประจำวัน)\nSystem: RUNNING\nScans Today: 1\nErrors: 0\nLast Scan: 2026-06-24T00:06:02.852625+00:00\n\nCurrent Price / ราคาปัจจุบัน: 13,822.44 THB\nBTC Guard / สถานะตลาดใหญ่: DANGER\nCurrent Signal / สัญญาณปัจจุบัน: DANGER\nEntry Score / คะแนนการเข้า: 30\nBounce Probability / โอกาสเด้งกลับ: 0\nOpportunity Score / ความน่าสนใจ: 29\n\nSignal Count: {}\nPosition / สถานะการถือเหรียญ: 0 ZEC\nNear Entry: NO\nLast Major Event: ROLLING_DROP_5\nQA Status: OK"
+  "last_daily_summary_preview": "🛡️ SEK Trade Guardian\nMode: ZEC Guardian Mode\n📊 DAILY SUMMARY / Daily Summary\n(สรุปประจำวัน)\nSystem: RUNNING\nScans Today: 2\nErrors: 0\nLast Scan: 2026-06-24T04:20:09.354595+00:00\n\nCurrent Price / ราคาปัจจุบัน: 13,728.08 THB\nBTC Guard / สถานะตลาดใหญ่: DANGER\nCurrent Signal / สัญญาณปัจจุบัน: DANGER\nEntry Score / คะแนนการเข้า: 30\nBounce Probability / โอกาสเด้งกลับ: 0\nOpportunity Score / ความน่าสนใจ: 29\n\nSignal Count: {}\nPosition / สถานะการถือเหรียญ: 0 ZEC\nNear Entry: NO\nLast Major Event: ROLLING_DROP_7\nQA Status: OK"
 }
