@@ -2262,6 +2262,34 @@
         "BTC Guard DANGER"
       ],
       "data_source_used": "CoinGecko"
+    },
+    {
+      "timestamp": "2026-06-25T23:05:35.600574+00:00",
+      "signal_id": null,
+      "symbol": "ZECUSDT",
+      "mode": "ZEC Guardian Mode",
+      "price_thb": 13928.41,
+      "price_usdt": 417.52,
+      "signal_type": "DANGER",
+      "entry_score": 0,
+      "bounce_probability": 0,
+      "recovery_probability": 65,
+      "opportunity_score": 14,
+      "btc_guard": {
+        "status": "DANGER",
+        "change_24h": -1.87893,
+        "change_7d": -3.1802703772280005,
+        "reason": "BTC below EMA200"
+      },
+      "event_type": null,
+      "recommended_action": "WAIT / NO TRADE",
+      "why_not_entry": [
+        "RSI not in entry zone",
+        "support proximity not confirmed",
+        "volume confirmation missing",
+        "BTC Guard DANGER"
+      ],
+      "data_source_used": "CoinGecko"
     }
   ]
 }
