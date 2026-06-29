@@ -20,12 +20,12 @@
     "zec_per_leg": 1
   },
   "last_action": null,
-  "updated_at": "2026-06-29T06:19:58.643856+00:00",
+  "updated_at": "2026-06-29T11:26:21.180047+00:00",
   "alerts": {
     "last_rolling_drop_event": "ROLLING_DROP_5",
     "last_rolling_drop_sent_at": "2026-06-29T01:32:46.413717+00:00",
-    "last_reference_price_thb": 12820.9,
-    "last_entry_score": 0,
+    "last_reference_price_thb": 12677.95,
+    "last_entry_score": 7,
     "signal:C:WAIT / NO TRADE": {
       "sent_at": "2026-06-28T23:17:39.201525+00:00"
     },
@@ -44,10 +44,10 @@
   },
   "qa": {
     "date": "2026-06-29",
-    "total_scans_today": 2,
+    "total_scans_today": 3,
     "total_errors_today": 0,
-    "last_scan_at": "2026-06-29T06:19:59.561732+00:00",
-    "last_success_at": "2026-06-29T06:19:59.561732+00:00",
+    "last_scan_at": "2026-06-29T11:26:21.888044+00:00",
+    "last_success_at": "2026-06-29T11:26:21.888044+00:00",
     "telegram_status": "unknown",
     "data_source_used": "CoinGecko",
     "last_signal": "DANGER",
@@ -55,5 +55,5 @@
     "state_valid": true,
     "learning_log_valid": true
   },
-  "last_daily_summary_preview": "🛡️ SEK Trade Guardian\nMode: ZEC Guardian Mode\n📊 DAILY SUMMARY / Daily Summary\n(สรุปประจำวัน)\nSystem: RUNNING\nScans Today: 2\nErrors: 0\nLast Scan: 2026-06-29T06:19:59.561732+00:00\n\nCurrent Price / ราคาปัจจุบัน: 12,820.90 THB\nBTC Guard / สถานะตลาดใหญ่: DANGER\nCurrent Signal / สัญญาณปัจจุบัน: DANGER\nEntry Score / คะแนนการเข้า: 0\nBounce Probability / โอกาสเด้งกลับ: 0\nOpportunity Score / ความน่าสนใจ: 14\n\nSignal Count: {}\nPosition / สถานะการถือเหรียญ: 0 ZEC\nNear Entry: NO\nLast Major Event: -\nQA Status: OK"
+  "last_daily_summary_preview": "🛡️ SEK Trade Guardian\nMode: ZEC Guardian Mode\n📊 DAILY SUMMARY / Daily Summary\n(สรุปประจำวัน)\nSystem: RUNNING\nScans Today: 3\nErrors: 0\nLast Scan: 2026-06-29T11:26:21.888044+00:00\n\nCurrent Price / ราคาปัจจุบัน: 12,677.95 THB\nBTC Guard / สถานะตลาดใหญ่: DANGER\nCurrent Signal / สัญญาณปัจจุบัน: DANGER\nEntry Score / คะแนนการเข้า: 7\nBounce Probability / โอกาสเด้งกลับ: 0\nOpportunity Score / ความน่าสนใจ: 18\n\nSignal Count: {}\nPosition / สถานะการถือเหรียญ: 0 ZEC\nNear Entry: NO\nLast Major Event: -\nQA Status: OK"
 }
