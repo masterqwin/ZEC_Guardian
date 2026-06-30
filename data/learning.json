@@ -7431,7 +7431,7 @@
       "outcome_24h": null,
       "outcome_3d": null,
       "outcome_7d": null,
-      "max_gain_percent": -1.8686495055484327,
+      "max_gain_percent": -0.2197478674416893,
       "max_drawdown_percent": -1.8953725371782284,
       "result_status": "PENDING",
       "hit_5_percent": false,
@@ -7481,7 +7481,7 @@
       "outcome_24h": null,
       "outcome_3d": null,
       "outcome_7d": null,
-      "max_gain_percent": -0.027231900402009426,
+      "max_gain_percent": 1.6803005663312192,
       "max_drawdown_percent": -0.027231900402009426,
       "result_status": "PENDING",
       "hit_5_percent": false,
@@ -7510,6 +7510,57 @@
         "ราคาอยู่ใกล้ EMA สำคัญ"
       ],
       "blockers": [
+        "support proximity not confirmed",
+        "volume confirmation missing",
+        "BTC Guard DANGER"
+      ],
+      "risk": [
+        "BTC Guard เสีย"
+      ],
+      "data_source": "CoinGecko",
+      "position_state": {
+        "total_zec": 0,
+        "total_cost_thb": 0,
+        "average_cost_thb": 0,
+        "lots": []
+      },
+      "recommended_action": "WAIT / NO TRADE",
+      "action": "WAIT / NO TRADE",
+      "event_type": "ROLLING_DROP_3",
+      "outcome_1h": null,
+      "outcome_4h": null,
+      "outcome_24h": null,
+      "outcome_3d": null,
+      "outcome_7d": null,
+      "max_gain_percent": 1.7079975869349715,
+      "max_drawdown_percent": 1.7079975869349715,
+      "result_status": "PENDING",
+      "hit_5_percent": false,
+      "hit_8_percent": false,
+      "hit_10_percent": false
+    },
+    {
+      "timestamp": "2026-06-30T15:42:44.850217+00:00",
+      "price_thb": 13217.89,
+      "price_usdt": 397.36,
+      "signal": "C",
+      "signal_type": "DANGER",
+      "confidence": 29,
+      "entry_score": 0,
+      "bounce_probability": 0,
+      "recovery_probability": 65,
+      "opportunity_score": 14,
+      "btc_guard": {
+        "status": "DANGER",
+        "change_24h": -2.43388,
+        "change_7d": -6.576701153899905,
+        "reason": "BTC below EMA200"
+      },
+      "reason": [
+        "ราคาอยู่ใกล้ EMA สำคัญ"
+      ],
+      "blockers": [
+        "RSI not in entry zone",
         "support proximity not confirmed",
         "volume confirmation missing",
         "BTC Guard DANGER"
