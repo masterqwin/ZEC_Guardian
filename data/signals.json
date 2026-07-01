@@ -16094,6 +16094,106 @@
         "tp100_thb": 14405.95,
         "reserved_capital_thb": 12500.0
       }
+    },
+    {
+      "timestamp": "2026-07-01T10:13:43.709465+00:00",
+      "signal_id": null,
+      "symbol": "ZECUSDT",
+      "price_usdt": 399.76,
+      "price_thb": 13347.26,
+      "grade": "C",
+      "signal_type": "DANGER",
+      "score": 74,
+      "confidence": 74,
+      "entry_score": 0,
+      "bounce_probability": 0,
+      "recovery_probability": 65,
+      "opportunity_score": 14,
+      "btc_guard_status": "DANGER",
+      "why_not_entry": [
+        "RSI not in entry zone",
+        "support proximity not confirmed",
+        "volume confirmation missing",
+        "BTC Guard DANGER"
+      ],
+      "reasons": [
+        "ราคาอยู่ใกล้ EMA สำคัญ",
+        "BTC Guard ยังไม่พัง"
+      ],
+      "risk_flags": [],
+      "data_source_used": "CoinGecko",
+      "tried_sources": [
+        "CoinGecko"
+      ],
+      "fx_rate": null,
+      "fx_source": null,
+      "indicators": {
+        "rsi14": 51.502561151887505,
+        "ema20": 399.30903439586024,
+        "ema50": 397.2733614684848,
+        "ema200": 409.73703059088285,
+        "atr14": 3.2321343400943356,
+        "volume_average20": 309779974.84965634,
+        "price_change_24h_percent": 1.8621666202782026,
+        "trend_state": "uptrend",
+        "current_volume": 11309916474.0
+      },
+      "btc_guard": {
+        "rsi14": 45.155864580511675,
+        "ema20": 58846.104439391645,
+        "ema50": 59132.467383773044,
+        "ema200": 60615.79824430845,
+        "atr14": 143.60005959398353,
+        "volume_average20": 33106531161.64814,
+        "price_change_24h_percent": -0.9687977476046904,
+        "trend_state": "downtrend"
+      },
+      "btc_guard_detail": {
+        "status": "DANGER",
+        "change_24h": -0.40159,
+        "change_7d": -6.339134692239981,
+        "reason": "BTC below EMA200"
+      },
+      "news_guard": {
+        "ok": true,
+        "state": "not_connected",
+        "reason": "News guard is reserved for future free news/RSS checks; no negative news source is connected yet."
+      },
+      "position": {
+        "total_zec": 0,
+        "total_cost_thb": 0,
+        "average_cost_thb": 0,
+        "lots": []
+      },
+      "profit_state": null,
+      "leg_plan": null,
+      "event": null,
+      "qa_status": {
+        "date": "2026-07-01",
+        "total_scans_today": 3,
+        "total_errors_today": 0,
+        "last_scan_at": "2026-07-01T10:13:44.531728+00:00",
+        "last_success_at": "2026-07-01T10:13:44.531728+00:00",
+        "telegram_status": "unknown",
+        "data_source_used": "CoinGecko",
+        "last_signal": "DANGER",
+        "last_event": null,
+        "state_valid": true,
+        "learning_log_valid": true
+      },
+      "recommended_action": "WAIT / NO TRADE",
+      "plan": {
+        "mode": "no_position",
+        "action": "รอ",
+        "buy_zone_usdt": 399.76,
+        "buy_zone_thb": 13347.26,
+        "quantity_zec": 1,
+        "tp50_usdt": 419.748,
+        "tp100_usdt": 427.7432,
+        "tp50_thb": 14014.62,
+        "tp100_thb": 14281.57,
+        "reserved_capital_thb": 12500.0
+      }
     }
   ]
 }
