@@ -8241,7 +8241,7 @@
       "outcome_3d": null,
       "outcome_7d": null,
       "max_gain_percent": 1.5060333356217244,
-      "max_drawdown_percent": 1.1908187545372297,
+      "max_drawdown_percent": 1.1035431696447509,
       "result_status": "PENDING",
       "hit_5_percent": false,
       "hit_8_percent": false,
@@ -8290,7 +8290,7 @@
       "outcome_3d": null,
       "outcome_7d": null,
       "max_gain_percent": -0.31053777861879656,
-      "max_drawdown_percent": -0.31053777861879656,
+      "max_drawdown_percent": -0.39651846570161153,
       "result_status": "PENDING",
       "hit_5_percent": false,
       "hit_8_percent": false,
@@ -8311,6 +8311,56 @@
         "status": "DANGER",
         "change_24h": 2.81283,
         "change_7d": -1.7739435965522459,
+        "reason": "BTC below EMA200"
+      },
+      "reason": [
+        "ราคาอยู่ใกล้ EMA สำคัญ",
+        "BTC Guard ยังไม่พัง"
+      ],
+      "blockers": [
+        "RSI not in entry zone",
+        "support proximity not confirmed",
+        "volume confirmation missing",
+        "BTC Guard DANGER"
+      ],
+      "risk": [],
+      "data_source": "CoinGecko",
+      "position_state": {
+        "total_zec": 0,
+        "total_cost_thb": 0,
+        "average_cost_thb": 0,
+        "lots": []
+      },
+      "recommended_action": "WAIT / NO TRADE",
+      "action": "WAIT / NO TRADE",
+      "event_type": null,
+      "outcome_1h": null,
+      "outcome_4h": null,
+      "outcome_24h": null,
+      "outcome_3d": null,
+      "outcome_7d": null,
+      "max_gain_percent": -0.08624852132502923,
+      "max_drawdown_percent": -0.08624852132502923,
+      "result_status": "PENDING",
+      "hit_5_percent": false,
+      "hit_8_percent": false,
+      "hit_10_percent": false
+    },
+    {
+      "timestamp": "2026-07-02T01:35:47.714296+00:00",
+      "price_thb": 13843.36,
+      "price_usdt": 415.09,
+      "signal": "B",
+      "signal_type": "DANGER",
+      "confidence": 74,
+      "entry_score": 0,
+      "bounce_probability": 0,
+      "recovery_probability": 65,
+      "opportunity_score": 14,
+      "btc_guard": {
+        "status": "DANGER",
+        "change_24h": 2.6128,
+        "change_7d": -1.0995468946312166,
         "reason": "BTC below EMA200"
       },
       "reason": [
