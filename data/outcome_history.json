@@ -3154,12 +3154,12 @@
       "outcome_24h": null,
       "outcome_3d": null,
       "outcome_7d": null,
-      "max_gain_percent": 3.873350457908839,
+      "max_gain_percent": 7.913029140704995,
       "max_drawdown_percent": -0.9822043262694438,
-      "hit_5_percent": false,
+      "hit_5_percent": true,
       "hit_8_percent": false,
       "hit_10_percent": false,
-      "result_status": "PENDING"
+      "result_status": "WIN"
     },
     {
       "signal_id": "2026-07-01T17:28:19.114410+00:00",
@@ -3174,12 +3174,12 @@
       "outcome_24h": null,
       "outcome_3d": null,
       "outcome_7d": null,
-      "max_gain_percent": 3.718164140208842,
+      "max_gain_percent": 7.751807561249113,
       "max_drawdown_percent": -1.130136466993099,
-      "hit_5_percent": false,
+      "hit_5_percent": true,
       "hit_8_percent": false,
       "hit_10_percent": false,
-      "result_status": "PENDING"
+      "result_status": "WIN"
     },
     {
       "signal_id": "2026-07-01T19:16:55.439354+00:00",
@@ -3194,12 +3194,12 @@
       "outcome_24h": null,
       "outcome_3d": null,
       "outcome_7d": null,
-      "max_gain_percent": 4.505838382059888,
+      "max_gain_percent": 8.570114788651951,
       "max_drawdown_percent": -0.3792820197913418,
-      "hit_5_percent": false,
-      "hit_8_percent": false,
+      "hit_5_percent": true,
+      "hit_8_percent": true,
       "hit_10_percent": false,
-      "result_status": "PENDING"
+      "result_status": "WIN"
     },
     {
       "signal_id": "2026-07-01T20:55:35.839642+00:00",
@@ -3214,12 +3214,12 @@
       "outcome_24h": null,
       "outcome_3d": null,
       "outcome_7d": null,
-      "max_gain_percent": 4.903719327561705,
+      "max_gain_percent": 8.98346949298362,
       "max_drawdown_percent": 1.1035431696447509,
-      "hit_5_percent": false,
-      "hit_8_percent": false,
+      "hit_5_percent": true,
+      "hit_8_percent": true,
       "hit_10_percent": false,
-      "result_status": "PENDING"
+      "result_status": "WIN"
     },
     {
       "signal_id": "2026-07-01T22:11:37.521733+00:00",
@@ -3234,12 +3234,12 @@
       "outcome_24h": null,
       "outcome_3d": null,
       "outcome_7d": null,
-      "max_gain_percent": 3.3472749158720436,
+      "max_gain_percent": 7.3664942975737615,
       "max_drawdown_percent": -0.39651846570161153,
-      "hit_5_percent": false,
+      "hit_5_percent": true,
       "hit_8_percent": false,
       "hit_10_percent": false,
-      "result_status": "PENDING"
+      "result_status": "WIN"
     },
     {
       "signal_id": "2026-07-01T23:40:56.172366+00:00",
@@ -3254,12 +3254,12 @@
       "outcome_24h": null,
       "outcome_3d": null,
       "outcome_7d": null,
-      "max_gain_percent": 3.6692069683031345,
+      "max_gain_percent": 7.7009464241507395,
       "max_drawdown_percent": -0.08624852132502923,
-      "hit_5_percent": false,
+      "hit_5_percent": true,
       "hit_8_percent": false,
       "hit_10_percent": false,
-      "result_status": "PENDING"
+      "result_status": "WIN"
     },
     {
       "signal_id": "2026-07-02T01:35:47.714296+00:00",
@@ -3274,12 +3274,12 @@
       "outcome_24h": null,
       "outcome_3d": null,
       "outcome_7d": null,
-      "max_gain_percent": 3.758697310479536,
+      "max_gain_percent": 7.793917083713771,
       "max_drawdown_percent": 1.3155043284289272,
-      "hit_5_percent": false,
+      "hit_5_percent": true,
       "hit_8_percent": false,
       "hit_10_percent": false,
-      "result_status": "PENDING"
+      "result_status": "WIN"
     },
     {
       "signal_id": "2026-07-02T05:39:06.474993+00:00",
@@ -3294,12 +3294,12 @@
       "outcome_24h": null,
       "outcome_3d": null,
       "outcome_7d": null,
-      "max_gain_percent": 2.357319126708761,
+      "max_gain_percent": 6.338038707636132,
       "max_drawdown_percent": -0.052875779686152126,
-      "hit_5_percent": false,
+      "hit_5_percent": true,
       "hit_8_percent": false,
       "hit_10_percent": false,
-      "result_status": "PENDING"
+      "result_status": "WIN"
     },
     {
       "signal_id": "2026-07-02T08:31:41.193159+00:00",
@@ -3314,8 +3314,28 @@
       "outcome_24h": null,
       "outcome_3d": null,
       "outcome_7d": null,
-      "max_gain_percent": 2.411469989953999,
+      "max_gain_percent": 6.3942955209344134,
       "max_drawdown_percent": 2.411469989953999,
+      "hit_5_percent": true,
+      "hit_8_percent": false,
+      "hit_10_percent": false,
+      "result_status": "WIN"
+    },
+    {
+      "signal_id": "2026-07-02T11:09:20.335949+00:00",
+      "created_at": "2026-07-02T11:09:20.335949+00:00",
+      "signal_type": "WAIT",
+      "entry_price_thb": 14363.69,
+      "entry_score": 47,
+      "bounce_probability": 47,
+      "opportunity_score": 52,
+      "outcome_1h": null,
+      "outcome_4h": null,
+      "outcome_24h": null,
+      "outcome_3d": null,
+      "outcome_7d": null,
+      "max_gain_percent": 3.889042439651641,
+      "max_drawdown_percent": 3.889042439651641,
       "hit_5_percent": false,
       "hit_8_percent": false,
       "hit_10_percent": false,
